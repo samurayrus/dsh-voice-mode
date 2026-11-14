@@ -22,12 +22,13 @@ import type { TtsEngine, TtsEngineStatus, TtsFileStatus } from './tts-queue.ts'
 import { parseEmotionTags } from './emotion.ts'
 
 export const TTS_MODEL_REPO = 'csukuangfj/sherpa-onnx-vits-zh-ll'
-export const KOKORO_MODEL_DIR_INT8 = 'csukuangfj/kokoro-int8-multi-lang-v1_1'
-export const KOKORO_MODEL_DIR_FP32 = 'csukuangfj/kokoro-multi-lang-v1_1'
-/** Kokoro 模型精度：int8（默认，CPU/低带宽友好）/ fp32（音质更好，GPU/大内存）。 */
+/** fork：俄语 Kokoro 模型目录（上游此处为 csukuangfj 的中英多语模型）。 */
+export const KOKORO_MODEL_DIR_INT8 = 'zaakirio/kokoro-ru'
+export const KOKORO_MODEL_DIR_FP32 = 'zaakirio/kokoro-ru'
+/** Kokoro 模型精度：俄语侧只有一份 q8 权重，保留该类型仅为兼容上层设置。 */
 export type KokoroModel = 'int8' | 'fp32'
-/** 按精度取模型目录（int8 与 fp32 是不同缓存目录，可同时保留、切换无需重下）。 */
-export const kokoroModelDir = (m: KokoroModel): string => (m === 'fp32' ? KOKORO_MODEL_DIR_FP32 : KOKORO_MODEL_DIR_INT8)
+/** 两种精度指向同一目录：俄语模型不再按精度分档。 */
+export const kokoroModelDir = (_m: KokoroModel): string => KOKORO_MODEL_DIR_INT8
 
 /** VITS 官方 SHA256（HF LFS 指针/内容哈希，固定）。 */
 const TTS_MODEL_FILES: ModelFileSpec[] = [
@@ -55,7 +56,7 @@ export function voiceToSid(voice: string): number {
   return hit ? hit.sid : 0
 }
 
-/** voice → sid（Kokoro）。接受 0-102 数字或音色英文名；非法回退 48（小北）。 */
+/** voice → sid（Kokoro）。俄语模型有两个音色 sveta(0) / masha(1)；无法识别时回退 masha。 */
 export function kokoroVoiceToSid(voice: string): number {
   const v = String(voice ?? '').trim().toLowerCase()
   if (/^\d+$/.test(v)) {
@@ -63,7 +64,7 @@ export function kokoroVoiceToSid(voice: string): number {
     if (n >= 0 && n <= KOKORO_VOICES.length - 1) return n
   }
   const hit = KOKORO_VOICES.find((s) => s.name.toLowerCase() === v)
-  return hit ? hit.sid : 48
+  return hit ? hit.sid : 1
 }
 
 /** f32 采样 → 16bit PCM（夹限幅）。 */
@@ -147,39 +148,22 @@ const VITS_SPEC: EngineSpec = {
  *   - int8：model.int8.onnx（~109MB，CPU/低带宽友好，默认）
  *   - fp32：model.onnx（~311MB，音质更好，GPU/大内存）
  */
-const KOKORO_SHARED_FILES: ModelFileSpec[] = [
-  { file: 'voices.bin', sha256: 'e64a5a581d8c2a350d848f51c3121657cd83aa07ed6109172177345874a7244c' },
-  { file: 'tokens.txt', sha256: '931ab2df2400cd65d580a22402024c2347ced8ae9ea300e545144b1aacc48e14' },
-  { file: 'lexicon-us-en.txt', sha256: '7daaab53a181be9885b853a8582bf1838186317e5dadacbcef9c426d6fa0da14' },
-  { file: 'lexicon-zh.txt', sha256: '11111d8cd695fba2ace1367a1d0a708b586e6ef5c1f9be91da5d7eef129b651c' },
-  { file: 'espeak-ng-data/phontab', sha256: '886f3fa402cb0ba73d483aa8ad000af47a6b7cc06293c75a97913fba68a530f6' },
-  { file: 'date-zh.fst', sha256: 'eb8aa079ae3cb81d8f4404992f39d61a0cb990947512b5b8d1e54d1f6980e718' },
-  { file: 'number-zh.fst', sha256: '743f402181fcfebf76cc2f0546b71fa26476e626fbe4e460fb7b4c3a7a8bd5bd' },
-  { file: 'phone-zh.fst', sha256: '1ac2b6fa56b1442320c4de7db08353bab8963a2b57f365eebcdd3a2d3562f8d7' },
-]
-
-const kokoroWorkerPaths = (dir: string, modelFile: string): Record<string, string> => ({
-  model: join(dir, modelFile),
+/** fork：俄语 woker 只需要三个文件（词表/音色包/权重），espeak 音素表由 npm 包自带。 */
+const kokoroWorkerPaths = (dir: string): Record<string, string> => ({
+  model: join(dir, 'model.onnx'),
   voices: join(dir, 'voices.bin'),
   tokens: join(dir, 'tokens.txt'),
-  dataDir: join(dir, 'espeak-ng-data'),
-  lexicon: [join(dir, 'lexicon-us-en.txt'), join(dir, 'lexicon-zh.txt')].join(','),
-  date: join(dir, 'date-zh.fst'),
-  phone: join(dir, 'phone-zh.fst'),
-  number: join(dir, 'number-zh.fst'),
-  lang: '',
 })
 
-/** 按精度构造 Kokoro 校验清单（主模型文件 + 各自 SHA256；支持文件共用）。 */
-export function kokoroSpec(model: KokoroModel): EngineSpec {
-  const main: ModelFileSpec =
-    model === 'fp32'
-      ? { file: 'model.onnx', revision: '914313412b607d95400bcd12446233fbd1248801', sha256: 'acc4adc175b9d9986106cd20060329673ad5a2e12ef3c557d2d3745b694f8b38' }
-      : { file: 'model.int8.onnx', revision: '155831f1b4ba23b1f5c058be6a61df90cefb2a37', sha256: 'bda15858163726a492d02a9a727bc263551b86ac77f90812c4b30ff41d380e26' }
+/**
+ * fork：Kokoro 规格改为「本地已备好的俄语模型」。
+ * files 为空表示不走下载/校验流程 —— 模型由 scripts/prepare-ru-model.mjs 准备。
+ */
+export function kokoroSpec(_model: KokoroModel): EngineSpec {
   return {
-    files: [main, ...KOKORO_SHARED_FILES.map((f) => ({ ...f, revision: main.revision }))],
-    workerPaths: (dir) => kokoroWorkerPaths(dir, main.file),
-    defaultVoice: 'zf_xiaobei',
+    files: [],
+    workerPaths: (dir) => kokoroWorkerPaths(dir),
+    defaultVoice: 'masha',
     toSid: kokoroVoiceToSid,
   }
 }
@@ -210,7 +194,10 @@ export function createSherpaLocalEngine(options: LocalEngineOptions): TtsEngine 
   const repoName = options.kind === 'kokoro' ? kokoroModelDir(kokoroModel) : TTS_MODEL_REPO
   const repoDir = join(cacheDir, repoName)
   /** 子进程脚本路径：与 lib/index.js 同目录（构建产物 lib/tts-vits-worker.cjs，CJS 以获得 IPC）。 */
-  const workerPath = fileURLToPath(new URL('./tts-vits-worker.cjs', import.meta.url))
+  // fork：kokoro 走俄语子进程；vits 仍用上游 worker（中文）。
+  const workerPath = fileURLToPath(
+    new URL(options.kind === 'kokoro' ? './ru-tts-worker.cjs' : './tts-vits-worker.cjs', import.meta.url),
+  )
 
   let child: ChildProcess | null = null
   /** 当前子进程是否已完成 init（避免每句合成都重建引擎实例——旧实现
@@ -337,7 +324,8 @@ export function createSherpaLocalEngine(options: LocalEngineOptions): TtsEngine 
           // 且无人再 close 的孤儿子进程——正是 R14 声明要根治的同一条泄漏链，只在 Kokoro
           // 路径未闭环（vits 不进该分支，故既有测试全绿也抓不到）。
           // 与 :293 同构：先判序再判失败（close 已到达时失败与否已无意义）。
-          if (options.kind === 'kokoro') {
+          // fork：俄语模型不走下载/整树校验，文件由 scripts/prepare-ru-model.mjs 准备。
+          if (options.kind === 'kokoro' && spec.files.length > 0) {
             const treeOk = await ensureModelTree({
               repo: repoName,
               repoDir,

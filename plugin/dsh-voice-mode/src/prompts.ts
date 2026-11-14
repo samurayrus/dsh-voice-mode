@@ -43,6 +43,8 @@ export function normalizePromptLang(raw: unknown): PromptLang {
  */
 const SAMPLE_ZH = '你好，欢迎使用语音模式。'
 const SAMPLE_EN = 'Hello, welcome to voice mode.'
+/** fork：本地 Kokoro 已换成俄语模型，试听必须用俄语句子。 */
+const SAMPLE_RU = 'Привет! Это проверка русского голоса. Как тебе звучание?'
 const SAMPLE_BY_LANG: Readonly<Record<string, string>> = {
   zh: SAMPLE_ZH,
   en: SAMPLE_EN,
@@ -57,7 +59,7 @@ const SAMPLE_BY_LANG: Readonly<Record<string, string>> = {
 }
 
 export function previewSample(engine: 'edge' | 'vits' | 'kokoro', voice: string): string {
-  if (engine === 'kokoro') return `${SAMPLE_ZH}${SAMPLE_EN}`
+  if (engine === 'kokoro') return SAMPLE_RU
   if (engine === 'vits') return SAMPLE_ZH
   const m = /^([a-z]{2,3})-/i.exec(voice)
   return (m && SAMPLE_BY_LANG[m[1].toLowerCase()]) || SAMPLE_EN

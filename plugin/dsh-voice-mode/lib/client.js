@@ -1,4 +1,4 @@
-window.__ModuleLoader__.load({ id: "dsh-voice-mode", factory: (require) => {
+window.__ModuleLoader__.load({ id: "dsh-voice-mode-ru", factory: (require) => {
 var module = { exports: {} }; var exports = module.exports;
 "use strict";
 var __create = Object.create;
@@ -2260,7 +2260,38 @@ var en = {
 var htmlLangIsZh = () => /^zh\b/i.test(
   typeof document !== "undefined" && document.documentElement.lang || (typeof navigator !== "undefined" ? navigator.language : "") || ""
 );
-var translateLocal = (key, isZh) => (isZh ? zh[key] : en[key]) ?? en[key] ?? key;
+var RU = {
+  // --- чтение и озвучка ---
+  secRead: "\u041E\u0437\u0432\u0443\u0447\u043A\u0430",
+  ttsEngineLabel: "\u0414\u0432\u0438\u0436\u043E\u043A \u043E\u0437\u0432\u0443\u0447\u043A\u0438",
+  descTtsEngine: "\u041B\u043E\u043A\u0430\u043B\u044C\u043D\u044B\u0439 Kokoro (\u0440\u0443\u0441\u0441\u043A\u0438\u0439, \u0433\u043E\u043B\u043E\u0441\u0430 \u041C\u0430\u0448\u0430 \u0438 \u0421\u0432\u0435\u0442\u0430) / \u043B\u043E\u043A\u0430\u043B\u044C\u043D\u044B\u0439 VITS (\u043A\u0438\u0442\u0430\u0439\u0441\u043A\u0438\u0439) / Edge \u2014 \u043E\u0431\u043B\u0430\u043A\u043E Microsoft, \u0442\u0435\u043A\u0441\u0442 \u0443\u0445\u043E\u0434\u0438\u0442 \u043D\u0430\u0440\u0443\u0436\u0443",
+  voiceLabel: "\u0413\u043E\u043B\u043E\u0441",
+  descVoiceKokoro: "\u0420\u0443\u0441\u0441\u043A\u0438\u0435 \u0433\u043E\u043B\u043E\u0441\u0430: \u041C\u0430\u0448\u0430 (\u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E) \u0438 \u0421\u0432\u0435\u0442\u0430. \u041F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u0441\u0442\u0440\u0435\u043B\u043A\u0430\u043C\u0438 \u0438\u043B\u0438 \u0438\u0437 \u0441\u043F\u0438\u0441\u043A\u0430",
+  descVoiceLocal: "\u0413\u043E\u043B\u043E\u0441\u0430 \u043B\u043E\u043A\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0434\u0432\u0438\u0436\u043A\u0430 (\u0432 \u043A\u0438\u0442\u0430\u0439\u0441\u043A\u043E\u0439 \u043C\u043E\u0434\u0435\u043B\u0438 VITS \u2014 \u043F\u044F\u0442\u044C \u0434\u0438\u043A\u0442\u043E\u0440\u043E\u0432)",
+  rateLabel: "\u0421\u043A\u043E\u0440\u043E\u0441\u0442\u044C",
+  descRate: "\u041C\u043D\u043E\u0436\u0438\u0442\u0435\u043B\u044C \u0441\u043A\u043E\u0440\u043E\u0441\u0442\u0438 \u0440\u0435\u0447\u0438: 0.5 \u043C\u0435\u0434\u043B\u0435\u043D\u043D\u043E, 2.0 \u0431\u044B\u0441\u0442\u0440\u043E, \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E 1.0",
+  readAloudLabel: "\u0427\u0438\u0442\u0430\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B",
+  descReadAloud: "\u0412 \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u043C \u0440\u0435\u0436\u0438\u043C\u0435 \u2014 \u0447\u0438\u0442\u0430\u0442\u044C \u0442\u043E\u043B\u044C\u043A\u043E \u0442\u0430\u043C; \u0412\u0441\u0435\u0433\u0434\u0430 \u2014 \u0447\u0438\u0442\u0430\u0442\u044C \u043B\u044E\u0431\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u0432 \u0442\u0435\u043A\u0443\u0449\u0435\u0439 \u0441\u0435\u0441\u0441\u0438\u0438; \u0412\u044B\u043A\u043B\u044E\u0447\u0435\u043D\u043E \u2014 \u043D\u0435 \u0447\u0438\u0442\u0430\u0442\u044C \u043D\u0438\u0447\u0435\u0433\u043E (\u043E\u0437\u0432\u0443\u0447\u043A\u0430 \u043F\u043E \u043A\u043E\u043C\u0430\u043D\u0434\u0435 \u0447\u0435\u0440\u0435\u0437 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442 say)",
+  readAloudVoice: "\u0412 \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u043C \u0440\u0435\u0436\u0438\u043C\u0435",
+  readAloudAlways: "\u0412\u0441\u0435\u0433\u0434\u0430",
+  readAloudOff: "\u0412\u044B\u043A\u043B\u044E\u0447\u0435\u043D\u043E",
+  showCaptionsLabel: "\u0421\u0443\u0431\u0442\u0438\u0442\u0440\u044B",
+  descShowCaptions: "\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u0441\u0443\u0431\u0442\u0438\u0442\u0440\u044B \u043F\u0440\u043E\u0438\u0437\u043D\u043E\u0441\u0438\u043C\u043E\u0433\u043E \u0442\u0435\u043A\u0441\u0442\u0430 \u043F\u043E\u0432\u0435\u0440\u0445 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B",
+  showStatusBarLabel: "\u0421\u0442\u0440\u043E\u043A\u0430 \u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u044F",
+  descShowStatusBar: "\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0435 \u043C\u0438\u043A\u0440\u043E\u0444\u043E\u043D\u0430 \u0438 \u043E\u0437\u0432\u0443\u0447\u043A\u0438",
+  engineKokoro: "\u041B\u043E\u043A\u0430\u043B\u044C\u043D\u044B\u0439 Kokoro",
+  engineVits: "\u041B\u043E\u043A\u0430\u043B\u044C\u043D\u044B\u0439 VITS",
+  engineEdge: "Edge (\u043E\u0431\u043B\u0430\u043A\u043E)",
+  preview: "\u041F\u0440\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C",
+  valueOn: "\u0432\u043A\u043B",
+  valueOff: "\u0432\u044B\u043A\u043B"
+};
+for (const [key, value] of Object.entries(RU)) {
+  if (value === void 0) continue;
+  zh[key] = value;
+  en[key] = value;
+}
+var translateLocal = (key, isZh) => RU[key] ?? ((isZh ? zh[key] : en[key]) ?? en[key] ?? key);
 
 // src/i18n.ts
 var LOCALE_NAMESPACE = "voice-mode";
@@ -2602,124 +2633,13 @@ var VITS_SPEAKERS = [
   { name: "bingjiao", sid: 3, zh: "\u51B0\u5A07", en: "Bing Jiao", gender: "M" },
   { name: "bazong", sid: 4, zh: "\u9738\u603B", en: "Ba Zong", gender: "M" }
 ];
-var KOKORO_F0 = [
-  224,
-  189,
-  154,
-  261,
-  226,
-  222,
-  220,
-  229,
-  198,
-  186,
-  212,
-  293,
-  233,
-  161,
-  247,
-  207,
-  218,
-  216,
-  220,
-  238,
-  242,
-  229,
-  198,
-  286,
-  211,
-  190,
-  264,
-  261,
-  226,
-  147,
-  216,
-  240,
-  233,
-  188,
-  222,
-  247,
-  253,
-  270,
-  276,
-  276,
-  279,
-  320,
-  247,
-  296,
-  276,
-  235,
-  139,
-  240,
-  282,
-  282,
-  238,
-  226,
-  273,
-  216,
-  286,
-  270,
-  198,
-  179,
-  117,
-  130,
-  114,
-  128,
-  108,
-  106,
-  122,
-  136,
-  190,
-  112,
-  108,
-  128,
-  131,
-  111,
-  110,
-  132,
-  138,
-  189,
-  137,
-  148,
-  151,
-  127,
-  135,
-  111,
-  138,
-  114,
-  125,
-  158,
-  128,
-  156,
-  132,
-  162,
-  131,
-  136,
-  142,
-  124,
-  129,
-  136,
-  126,
-  135,
-  161,
-  150,
-  124,
-  104,
-  124
-];
+var KOKORO_F0 = [196, 208];
 var KOKORO_NAMED = {
-  48: { name: "zf_xiaobei", zh: "\u5C0F\u5317", en: "Xiaobei" },
-  49: { name: "zf_xiaoni", zh: "\u5C0F\u59AE", en: "Xiaoni" },
-  50: { name: "zf_xiaoxiao", zh: "\u5C0F\u5C0F", en: "Xiaoxiao" },
-  51: { name: "zf_xiaoyi", zh: "\u5C0F\u827A", en: "Xiaoyi" }
+  0: { name: "sveta", zh: "\u0421\u0432\u0435\u0442\u0430", en: "Sveta" },
+  1: { name: "masha", zh: "\u041C\u0430\u0448\u0430", en: "Masha" }
 };
-var KOKORO_POPULAR_MALE = {
-  62: "deep",
-  68: "rich",
-  75: "clear",
-  76: "magnetic"
-};
-var KOKORO_PINNED = [62, 68, 75, 76];
+var KOKORO_POPULAR_MALE = {};
+var KOKORO_PINNED = [1, 0];
 var KOKORO_VOICES = [
   ...KOKORO_PINNED.map((sid) => ({ name: KOKORO_NAMED[sid]?.name ?? String(sid), sid })),
   ...KOKORO_F0.map((_, sid) => ({ name: KOKORO_NAMED[sid]?.name ?? String(sid), sid })).filter(
@@ -2771,12 +2691,6 @@ function kokoroOptions() {
 }
 function genderFromEdge(g) {
   return g === "Female" ? t("genderFemale") : g === "Male" ? t("genderMale") : g === "Neutral" ? t("genderNeutral") : g;
-}
-function hostOptions() {
-  return [
-    { v: "https://huggingface.co", label: `${t("hostOfficial")} huggingface.co` },
-    { v: "https://hf-mirror.com", label: `${t("hostMirror")} hf-mirror.com` }
-  ];
 }
 var edgeCleanName = (fn) => fn.replace(/^Microsoft\s+/, "").replace(/\s+Online\s+\(Natural\)/, "").split(/\s*-\s*/)[0].trim();
 function edgeAllOptions(raw, locale) {
@@ -3078,66 +2992,6 @@ function ShortcutField({
       )
     ] }),
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { style: { fontSize: 11, lineHeight: "14px", color: err ? "var(--dsw-alias-state-error-primary)" : "var(--dsw-alias-label-tertiary)" }, children: recording ? t("shortcutRecording") : err })
-  ] });
-}
-function SelectField({
-  score,
-  field,
-  value,
-  options,
-  placeholder,
-  footer
-}) {
-  const cur = String(value ?? "");
-  const inOptions = options.some((o) => o.v === cur);
-  const [custom, setCustom] = (0, import_react2.useState)(inOptions ? "" : cur);
-  (0, import_react2.useEffect)(() => {
-    if (!options.some((o) => o.v === cur)) setCustom(cur);
-  }, [cur, options]);
-  const selectStyle = {
-    ...inputStyle,
-    appearance: "none",
-    cursor: "pointer",
-    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='%2381858C' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`,
-    backgroundPosition: "right 12px center",
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "12px 12px",
-    paddingRight: 32
-  };
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { style: { display: "flex", flexDirection: "column", gap: 6, width: 280, alignItems: "stretch" }, children: [
-    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
-      "select",
-      {
-        style: selectStyle,
-        value: inOptions ? cur : "__custom__",
-        onChange: (e) => {
-          const v = e.target.value;
-          if (v === "__custom__") void score.set(field, custom);
-          else void score.set(field, v);
-        },
-        children: [
-          options.map((o) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("option", { value: o.v, children: o.label }, o.v)),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("option", { value: "__custom__", children: [
-            t("custom"),
-            "\u2026"
-          ] })
-        ]
-      }
-    ),
-    !inOptions && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-      "input",
-      {
-        style: inputStyle,
-        value: custom,
-        placeholder,
-        onChange: (e) => setCustom(e.target.value),
-        onBlur: () => void score.set(field, custom),
-        onKeyDown: (e) => {
-          if (e.key === "Enter") void score.set(field, custom);
-        }
-      }
-    ),
-    footer?.(inOptions ? cur : custom)
   ] });
 }
 var stepBtn = {
@@ -3682,18 +3536,6 @@ function VoiceSettingsCard({ scope, defaultOpen = false }) {
             }
           ) }),
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EngineStatusInline, {}),
-          engine === "kokoro" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { name: "kokoroModel", desc: t("descKokoroModel"), children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-            SegGroup,
-            {
-              score: scope,
-              field: "kokoroModel",
-              value: value.kokoroModel,
-              options: [
-                { v: "int8", label: t("kokoroModelInt8") },
-                { v: "fp32", label: t("kokoroModelFp32") }
-              ]
-            }
-          ) }),
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
             Row,
             {
@@ -3849,7 +3691,6 @@ function VoiceSettingsCard({ scope, defaultOpen = false }) {
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { name: "silenceMs", desc: t("descSilence"), children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(NumberField, { score: scope, field: "silenceMs", value: value.silenceMs ?? 1500, min: 500, max: 3e4, step: 100 }) }),
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { name: "idleTimeoutMinutes", desc: t("descIdle"), children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(NumberField, { score: scope, field: "idleTimeoutMinutes", value: value.idleTimeoutMinutes ?? 5, min: 1, max: 120, step: 1 }) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Section, { title: t("secModel"), children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Row, { name: "modelHost", desc: t("descModelHost"), children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectField, { score: scope, field: "modelHost", value: value.modelHost ?? "", options: hostOptions(), placeholder: "https://..." }) }) }),
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { style: { fontSize: 12, color: t2.term, lineHeight: "18px", padding: "4px 0 8px" }, children: t("settingsEffectiveNote") }),
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ModelStatusView, {})
       ] })
@@ -4011,7 +3852,7 @@ function telemetryDeltas(tel) {
   }
   return out;
 }
-var BUILD_TAG = "e931c32";
+var BUILD_TAG = "28174ba";
 var TELEMETRY_FLAG = "dsh-voice-mode.telemetry";
 var telemetryEnabled = typeof localStorage !== "undefined" && localStorage.getItem(TELEMETRY_FLAG) === "1";
 console.log("[dsh-voice] build=" + BUILD_TAG);
@@ -4226,7 +4067,7 @@ function apply(ctx) {
         order: 100,
         // M13：函数形式（与下方 settings.section 注册一致）——注册时求值会把
         // 切换语言前的旧文案冻在菜单里；函数形式每次渲染读当前语言。
-        label: () => t("stateVoiceMode")
+        label: () => "\u0413\u043E\u043B\u043E\u0441 \u0438 \u043E\u0437\u0432\u0443\u0447\u043A\u0430"
       },
       () => React.createElement(VoiceSettingsCard, { scope })
     )
@@ -4234,14 +4075,16 @@ function apply(ctx) {
   ctx.slots.inject(
     "settings.section",
     () => ctx.slots.register(
-      { name: "settings.section", id: "voice-mode", order: 100, label: () => t("stateVoiceMode") },
+      { name: "settings.section", id: "voice-mode", order: 100, label: () => "\u0413\u043E\u043B\u043E\u0441 \u0438 \u043E\u0437\u0432\u0443\u0447\u043A\u0430" },
       () => React.createElement(VoiceSettingsCard, { scope, defaultOpen: true })
     )
   );
   ctx.slots.inject(
     "plugins.bundle.config",
     () => ctx.slots.register(
-      { name: "plugins.bundle.config", key: "dsh-voice-mode" },
+      // fork: ключ обязан совпадать с именем пакета, иначе карточка настроек
+      // в странице плагина не рендерится (было 'dsh-voice-mode').
+      { name: "plugins.bundle.config", key: "dsh-voice-mode-ru" },
       (props) => props?.view === "summary" ? React.createElement("span", null, t("settingsCardDesc")) : React.createElement(VoiceSettingsCard, { scope })
     )
   );
@@ -4899,9 +4742,9 @@ function createVoiceBus(basePath = BASE_PATH2, ctx) {
       notify();
     }
     const readAloud = ui.boot.readAloud ?? "voice";
-    if (readAloud === "off") return;
+    if (readAloud === "off" && !frame.say) return;
     const alwaysHere = readAloud === "always" && frame.sessionId === focusedSessionId && focusOwnerTab === TAB_ID && !(voiceActive === frame.sessionId && voiceOwnerTab !== null && voiceOwnerTab !== TAB_ID);
-    if (frame.sessionId !== activeSessionId && !alwaysHere) return;
+    if (!frame.say && frame.sessionId !== activeSessionId && !alwaysHere) return;
     const rejectLine = rejectSeqUpTo.get(frame.sessionId);
     if (rejectLine !== void 0 && frame.sentenceId <= rejectLine) return;
     if (backchannelHoldUntil && Date.now() < backchannelHoldUntil) {

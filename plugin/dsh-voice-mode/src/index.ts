@@ -50,6 +50,7 @@ import type { HostErrorCode } from './errors.ts'
 import { en } from './strings.ts'
 import { correctText } from './llm-correct.ts'
 import { normalizePromptLang, previewSample, spokenPrompt, type PromptLang } from './prompts.ts'
+import { makeSayTool } from './say-tool.ts'
 import { pickKnownKeys, readLegacyVoiceSettings, readOverrides, settingsFilePath, unknownKeys, writeOverrides } from './settings-store.ts'
 
 export const name = 'voice-mode'
@@ -168,7 +169,8 @@ const VOICE_SPOKEN_SECTION = 'voice-mode:spoken-format'
  */
 type AgentCarriedContext = AssembleContext & { agent?: { id: string } }
 
-export const inject = ['webServer', 'settings', 'sessions']
+// fork: 'tools' обязателен — без него ctx.tools не существует и say не регистрируется.
+export const inject = ['webServer', 'settings', 'sessions', 'tools']
 
 /**
  * 模型缓存目录平台默认值：Windows 用 LOCALAPPDATA，类 Unix 用 ~/.cache。
@@ -258,10 +260,11 @@ export interface VoiceSettingsValue {
 
 /** 平台常量默认（最底层；config base 与用户设置逐层覆盖）。 */
 const VOICE_SETTINGS_DEFAULTS: VoiceSettingsValue = {
-  ttsEngine: 'edge',
+  // fork: русский локальный движок и голос Маши по умолчанию.
+  ttsEngine: 'kokoro',
   kokoroModel: 'int8',
-  voice: 'zh-CN-XiaoxiaoNeural',
-  rate: 1.1,
+  voice: 'masha',
+  rate: 1,
   interruptLevel: 0,
   silenceMs: 1500,
   idleTimeoutMinutes: 5,
@@ -279,7 +282,9 @@ const VOICE_SETTINGS_DEFAULTS: VoiceSettingsValue = {
   shortcut: 'Ctrl+Shift+V',
   composerShortcut: 'Alt+Enter',
   spokenFormat: true,
-  senseVoice: true,
+  // fork: SenseVoice не знает русского (zh/en/ja/ko/yue) — уточнение им финальной
+  // фразы портило бы русский текст, поэтому по умолчанию выключено.
+  senseVoice: false,
   wakeWord: '',
   toolBeep: false,
   senseITN: true,
@@ -1373,6 +1378,120 @@ export function apply(ctx: Context, config: Config): void {
     }),
   )
 
+  // fork 新增：/say —— 按需朗读任意短语（agent 的「说一句」通道）。
+  // 文本按句切分，逐句合成后推给已连接的浏览器；帧带 say: true 与合成 sessionId
+  // （'__say__'），因此即使自动朗读关闭也能出声（客户端侧有两处对应放行）。
+  // 立即应答 + 后台串行合成：调用方（工具）不必等整段音频，第一句就开声。
+  let saySeq = 0
+  let sayChain: Promise<void> = Promise.resolve()
+  /** fork：按需朗读实现（/say 路由与 say 工具共用）。调用即返回，合成在后台串行推进。 */
+  const sayText = (text: string, voice?: string, rate?: number): void => {
+    const sentences = text
+      .split(/(?<=[.!?…;。])\s+/u)
+      .map((s) => s.trim())
+      .filter(Boolean)
+    const chunks = sentences.length > 0 ? sentences : [text]
+    const run = async (): Promise<void> => {
+      for (const sentence of chunks) {
+        try {
+          const buf = await queue.synthesize(sentence, { voice, rate })
+          const mime = queue.mime
+          const seq = ++saySeq
+          broadcast('audio', {
+            sessionId: '__say__',
+            sentenceId: seq,
+            chunkId: 0,
+            final: false,
+            audio: buf.toString('base64'),
+            mime,
+            say: true,
+          })
+          broadcast('audio', {
+            sessionId: '__say__',
+            sentenceId: seq,
+            chunkId: 1,
+            final: true,
+            text: sentence,
+            audio: '',
+            mime,
+            say: true,
+          })
+        } catch (e) {
+          console.warn(`[dsh-voice-mode] say failed: ${String(e)}`)
+        }
+      }
+    }
+    sayChain = sayChain.then(run, run)
+  }
+  ctx.effect(() =>
+    ctx.webServer.register({
+      kind: 'exact',
+      path: `${base}/say`,
+      handler: (req: IncomingMessage, res: ServerResponse) => {
+        if (denyNonLoopback(req, res)) return
+        if (req.method !== 'POST') {
+          res.setHeader('allow', 'POST')
+          respondJson(res, 405, { code: 'method_not_allowed', error: 'POST required' })
+          return
+        }
+        if (denyCrossOrigin(req, res)) return
+        if (!config.enabled) {
+          respondJson(res, 403, { code: 'voice_disabled', error: 'voice mode disabled' })
+          return
+        }
+        collectBody(req, res, MAX_JSON_BODY, (body) => {
+          let text = ''
+          let voice = ''
+          let rate: number | undefined
+          try {
+            const parsed = JSON.parse(body || '{}') as { text?: unknown; voice?: unknown; rate?: unknown }
+            text = String(parsed.text ?? '').trim()
+            voice = String(parsed.voice ?? '').trim()
+            if (typeof parsed.rate === 'number' && Number.isFinite(parsed.rate)) {
+              rate = Math.min(2, Math.max(0.5, parsed.rate))
+            }
+          } catch {
+            // malformed body → text '' → 400
+          }
+          if (!text) {
+            respondJson(res, 400, { code: 'bad_request', error: 'text required' })
+            return
+          }
+          if (text.length > 2000) {
+            respondJson(res, 400, { code: 'bad_request', error: 'text too long' })
+            return
+          }
+          if (!limiter.hit(`say:${clientKey(req)}`, 30, 60000)) {
+            respondJson(res, 429, { code: 'rate_limited', error: 'rate limited' })
+            return
+          }
+          const sentences = text
+            .split(/(?<=[.!?…;。])\s+/u)
+            .map((s) => s.trim())
+            .filter(Boolean)
+          const chunks = sentences.length > 0 ? sentences : [text]
+          respondJson(res, 200, { ok: true, accepted: true, sentences: chunks.length })
+          sayText(text, voice || undefined, rate)
+        })
+      },
+    }),
+  )
+
+  // fork：把「说一句」做成真正的工具 —— 换会话也带着使用策略（写在描述里），
+  // 不再依赖 AGENTS.md,也不再需要外部脚本打 HTTP。
+  // 结果 кладём в статус (/models/status → sayTool): так видно, приняла ли регистрация.
+  let sayToolState: string = 'pending'
+  ctx.effect(() => {
+    try {
+      ctx.tools.register(makeSayTool({ say: sayText }))
+      sayToolState = 'ok'
+    } catch (e) {
+      sayToolState = e instanceof Error ? `${e.name}: ${e.message}` : String(e)
+      console.warn(`[dsh-voice-mode-ru] say tool not registered: ${sayToolState}`)
+    }
+    return () => {}
+  })
+
   // Issue #15 批 4：LLM 纠错路由（可选，llmCorrect 设置默认关）。客户端发送前对整条草稿
   // 调一次；失败/无模型一律回退原文（respondJson 200 { text: original }——纠错是纯附加层，
   // 客户端见 ok 即用结果，不因纠错失败阻断发送）。
@@ -1549,7 +1668,8 @@ export function apply(ctx: Context, config: Config): void {
       handler: (req, res: ServerResponse) => {
         if (denyNonLoopback(req, res)) return
         // 模型实时状态（设置面板轮询；无需语音模式）。
-        respondJson(res, 200, { ...asr.modelStatus(), tts: queue.status() })
+        // fork: sayTool — результат регистрации инструмента say ('ok' | текст ошибки).
+        respondJson(res, 200, { ...asr.modelStatus(), tts: queue.status(), sayTool: sayToolState })
       },
     }),
   )

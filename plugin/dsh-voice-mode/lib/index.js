@@ -459,12 +459,12 @@ async function ensureModelTree(opts) {
 
 // src/asr-host.ts
 var { createOnlineRecognizer, createVad } = sherpa_onnx;
-var MODEL_REPO = "csukuangfj/sherpa-onnx-streaming-zipformer-zh-int8-2025-06-30";
+var MODEL_REPO = "csukuangfj/sherpa-onnx-streaming-zipformer-small-ru-vosk-int8-2025-08-16";
 var MODEL_FILES = [
-  { file: "encoder.int8.onnx", sha256: "5ac51e27981bb4dab01bb9be4958453ba50c3b61c063ddda0eab23fd3671aa4f" },
-  { file: "decoder.onnx", sha256: "06522ad63cec0fdf6809f4e1db9bb4f7d710c34582e3b35db62ac60eccafac7e" },
-  { file: "joiner.int8.onnx", sha256: "b34584dc6f561089e1d747fedebb3765f2caa72c927ef54d7ca55e5ae40a814b" },
-  { file: "tokens.txt", sha256: "6193c7ea1c96d0d9a1e9652789b40d13a8a913b434a5451e93158f5a09fd6652" }
+  { file: "encoder.int8.onnx", sha256: "e0db705e94ec35d803b1df4f40cda23d064e1142977c80ab288430b109777a9d" },
+  { file: "decoder.onnx", sha256: "89b3088a9e20e1ef7f2e85ce1a3478afe6a9c4ac57369cabcc4beb8e95328ea0" },
+  { file: "joiner.int8.onnx", sha256: "b55784b071ab7512eab4c7c44e4f5478284ef33c83562cc6a249b972515a31e5" },
+  { file: "tokens.txt", sha256: "93bbbc0bae6b78c0bbb743d4aa9fded3bb5ff3aac5f0200e3a769a5a05e0fdf6" }
 ];
 var VAD_REPO = "csukuangfj/vad";
 var VAD_FILES = [
@@ -1868,118 +1868,12 @@ var VITS_SPEAKERS = [
   { name: "bingjiao", sid: 3, zh: "\u51B0\u5A07", en: "Bing Jiao", gender: "M" },
   { name: "bazong", sid: 4, zh: "\u9738\u603B", en: "Ba Zong", gender: "M" }
 ];
-var KOKORO_F0 = [
-  224,
-  189,
-  154,
-  261,
-  226,
-  222,
-  220,
-  229,
-  198,
-  186,
-  212,
-  293,
-  233,
-  161,
-  247,
-  207,
-  218,
-  216,
-  220,
-  238,
-  242,
-  229,
-  198,
-  286,
-  211,
-  190,
-  264,
-  261,
-  226,
-  147,
-  216,
-  240,
-  233,
-  188,
-  222,
-  247,
-  253,
-  270,
-  276,
-  276,
-  279,
-  320,
-  247,
-  296,
-  276,
-  235,
-  139,
-  240,
-  282,
-  282,
-  238,
-  226,
-  273,
-  216,
-  286,
-  270,
-  198,
-  179,
-  117,
-  130,
-  114,
-  128,
-  108,
-  106,
-  122,
-  136,
-  190,
-  112,
-  108,
-  128,
-  131,
-  111,
-  110,
-  132,
-  138,
-  189,
-  137,
-  148,
-  151,
-  127,
-  135,
-  111,
-  138,
-  114,
-  125,
-  158,
-  128,
-  156,
-  132,
-  162,
-  131,
-  136,
-  142,
-  124,
-  129,
-  136,
-  126,
-  135,
-  161,
-  150,
-  124,
-  104,
-  124
-];
+var KOKORO_F0 = [196, 208];
 var KOKORO_NAMED = {
-  48: { name: "zf_xiaobei", zh: "\u5C0F\u5317", en: "Xiaobei" },
-  49: { name: "zf_xiaoni", zh: "\u5C0F\u59AE", en: "Xiaoni" },
-  50: { name: "zf_xiaoxiao", zh: "\u5C0F\u5C0F", en: "Xiaoxiao" },
-  51: { name: "zf_xiaoyi", zh: "\u5C0F\u827A", en: "Xiaoyi" }
+  0: { name: "sveta", zh: "\u0421\u0432\u0435\u0442\u0430", en: "Sveta" },
+  1: { name: "masha", zh: "\u041C\u0430\u0448\u0430", en: "Masha" }
 };
-var KOKORO_PINNED = [62, 68, 75, 76];
+var KOKORO_PINNED = [1, 0];
 var KOKORO_VOICES = [
   ...KOKORO_PINNED.map((sid) => ({ name: KOKORO_NAMED[sid]?.name ?? String(sid), sid })),
   ...KOKORO_F0.map((_, sid) => ({ name: KOKORO_NAMED[sid]?.name ?? String(sid), sid })).filter(
@@ -1989,9 +1883,8 @@ var KOKORO_VOICES = [
 
 // src/tts-local.ts
 var TTS_MODEL_REPO = "csukuangfj/sherpa-onnx-vits-zh-ll";
-var KOKORO_MODEL_DIR_INT8 = "csukuangfj/kokoro-int8-multi-lang-v1_1";
-var KOKORO_MODEL_DIR_FP32 = "csukuangfj/kokoro-multi-lang-v1_1";
-var kokoroModelDir = (m) => m === "fp32" ? KOKORO_MODEL_DIR_FP32 : KOKORO_MODEL_DIR_INT8;
+var KOKORO_MODEL_DIR_INT8 = "zaakirio/kokoro-ru";
+var kokoroModelDir = (_m) => KOKORO_MODEL_DIR_INT8;
 var TTS_MODEL_FILES = [
   { file: "model.onnx", sha256: "6c349bdd73dc928234dd7bc86929748bba32cd5264d32d915bf7b7aa0595965b" },
   { file: "lexicon.txt", sha256: "b3a82f16b286c424953dea3686039e7ab465fa8e15d87ef8abd0ec69175beb21" },
@@ -2017,7 +1910,7 @@ function kokoroVoiceToSid(voice) {
     if (n >= 0 && n <= KOKORO_VOICES.length - 1) return n;
   }
   const hit = KOKORO_VOICES.find((s) => s.name.toLowerCase() === v);
-  return hit ? hit.sid : 48;
+  return hit ? hit.sid : 1;
 }
 function floatToPcm16(samples) {
   const buf = Buffer.alloc(samples.length * 2);
@@ -2057,33 +1950,16 @@ var VITS_SPEC = {
   defaultVoice: "suyingxue",
   toSid: voiceToSid
 };
-var KOKORO_SHARED_FILES = [
-  { file: "voices.bin", sha256: "e64a5a581d8c2a350d848f51c3121657cd83aa07ed6109172177345874a7244c" },
-  { file: "tokens.txt", sha256: "931ab2df2400cd65d580a22402024c2347ced8ae9ea300e545144b1aacc48e14" },
-  { file: "lexicon-us-en.txt", sha256: "7daaab53a181be9885b853a8582bf1838186317e5dadacbcef9c426d6fa0da14" },
-  { file: "lexicon-zh.txt", sha256: "11111d8cd695fba2ace1367a1d0a708b586e6ef5c1f9be91da5d7eef129b651c" },
-  { file: "espeak-ng-data/phontab", sha256: "886f3fa402cb0ba73d483aa8ad000af47a6b7cc06293c75a97913fba68a530f6" },
-  { file: "date-zh.fst", sha256: "eb8aa079ae3cb81d8f4404992f39d61a0cb990947512b5b8d1e54d1f6980e718" },
-  { file: "number-zh.fst", sha256: "743f402181fcfebf76cc2f0546b71fa26476e626fbe4e460fb7b4c3a7a8bd5bd" },
-  { file: "phone-zh.fst", sha256: "1ac2b6fa56b1442320c4de7db08353bab8963a2b57f365eebcdd3a2d3562f8d7" }
-];
-var kokoroWorkerPaths = (dir, modelFile) => ({
-  model: join3(dir, modelFile),
+var kokoroWorkerPaths = (dir) => ({
+  model: join3(dir, "model.onnx"),
   voices: join3(dir, "voices.bin"),
-  tokens: join3(dir, "tokens.txt"),
-  dataDir: join3(dir, "espeak-ng-data"),
-  lexicon: [join3(dir, "lexicon-us-en.txt"), join3(dir, "lexicon-zh.txt")].join(","),
-  date: join3(dir, "date-zh.fst"),
-  phone: join3(dir, "phone-zh.fst"),
-  number: join3(dir, "number-zh.fst"),
-  lang: ""
+  tokens: join3(dir, "tokens.txt")
 });
-function kokoroSpec(model) {
-  const main = model === "fp32" ? { file: "model.onnx", revision: "914313412b607d95400bcd12446233fbd1248801", sha256: "acc4adc175b9d9986106cd20060329673ad5a2e12ef3c557d2d3745b694f8b38" } : { file: "model.int8.onnx", revision: "155831f1b4ba23b1f5c058be6a61df90cefb2a37", sha256: "bda15858163726a492d02a9a727bc263551b86ac77f90812c4b30ff41d380e26" };
+function kokoroSpec(_model) {
   return {
-    files: [main, ...KOKORO_SHARED_FILES.map((f) => ({ ...f, revision: main.revision }))],
-    workerPaths: (dir) => kokoroWorkerPaths(dir, main.file),
-    defaultVoice: "zf_xiaobei",
+    files: [],
+    workerPaths: (dir) => kokoroWorkerPaths(dir),
+    defaultVoice: "masha",
     toSid: kokoroVoiceToSid
   };
 }
@@ -2104,7 +1980,9 @@ function createSherpaLocalEngine(options) {
   const spec = options.kind === "kokoro" ? kokoroSpec(kokoroModel) : VITS_SPEC;
   const repoName = options.kind === "kokoro" ? kokoroModelDir(kokoroModel) : TTS_MODEL_REPO;
   const repoDir = join3(cacheDir, repoName);
-  const workerPath = fileURLToPath2(new URL("./tts-vits-worker.cjs", import.meta.url));
+  const workerPath = fileURLToPath2(
+    new URL(options.kind === "kokoro" ? "./ru-tts-worker.cjs" : "./tts-vits-worker.cjs", import.meta.url)
+  );
   let child = null;
   let childInit = false;
   let closed = false;
@@ -2176,7 +2054,7 @@ function createSherpaLocalEngine(options) {
               if (closed) return;
               if (!ok) throw new Error("local TTS model download/verify failed: " + f.file);
             }
-            if (options.kind === "kokoro") {
+            if (options.kind === "kokoro" && spec.files.length > 0) {
               const treeOk = await ensureModelTree({
                 repo: repoName,
                 repoDir,
@@ -2433,6 +2311,295 @@ var RateLimiter = class {
 };
 
 // src/strings.ts
+var zh = {
+  stateVoiceMode: "\u8BED\u97F3\u6A21\u5F0F",
+  ttsNoticeFail: "\u6717\u8BFB\u8FDE\u63A5\u5931\u8D25\uFF1A\u6B63\u5728\u91CD\u8BD5\u2026",
+  ttsSkipNotice: "\u6709\u4E00\u53E5\u6717\u8BFB\u5931\u8D25\uFF0C\u5DF2\u8DF3\u8FC7\uFF08\u53EF\u91CD\u53D1\u8FD9\u6761\u6D88\u606F\uFF09",
+  ttsUnavailableNotice: "\u6717\u8BFB\u8FDE\u7EED\u5931\u8D25\uFF1A\u4E91\u7AEF\u6717\u8BFB\u6682\u4E0D\u53EF\u7528\u3002\u53EF\u7A0D\u540E\u518D\u8BD5\uFF0C\u6216\u5728\u8BBE\u7F6E\u91CC\u628A\u6717\u8BFB\u5F15\u64CE\u5207\u6362\u4E3A\u672C\u5730 VITS / Kokoro",
+  enterFail: "\u8FDB\u5165\u8BED\u97F3\u6A21\u5F0F\u5931\u8D25",
+  disabled: "\u8BED\u97F3\u6A21\u5F0F\u5DF2\u7981\u7528\uFF08\u63D2\u4EF6 enabled=false\uFF09",
+  sendFailKept: "\u53D1\u9001\u5931\u8D25\uFF0C\u5DF2\u4FDD\u7559\u5728\u8349\u7A3F",
+  micDenied: "\u9EA6\u514B\u98CE\u88AB\u62D2\u7EDD\uFF1A\u8BF7\u5728\u6D4F\u89C8\u5668\u5730\u5740\u680F\u5141\u8BB8\u9EA6\u514B\u98CE\u6743\u9650",
+  micBusy: "\u9EA6\u514B\u98CE\u88AB\u5176\u4ED6\u7A0B\u5E8F\u5360\u7528\uFF1A\u8BF7\u5173\u95ED\u5360\u7528\u7A0B\u5E8F\u540E\u91CD\u8BD5",
+  micUnavailable: "\u9EA6\u514B\u98CE\u4E0D\u53EF\u7528",
+  recognizing: "\u8BC6\u522B\u4E2D\u2026",
+  // UX-I1 联动态：纠错在途 / 纠错放弃回退 / 附和词忽略 / 语音按钮态文案。
+  correctFixing: "\u7EA0\u9519\u4E2D\u2026",
+  correctAbandoned: "\u5DF2\u4FDD\u7559\u539F\u6587\u5728\u8349\u7A3F",
+  backchannelDropped: "\u5DF2\u5FFD\u7565\u9644\u548C\u8BCD\uFF0C\u4E0D\u53D1\u9001",
+  buttonLoading: "\u52A0\u8F7D\u4E2D\u2026",
+  buttonListening: "\u8046\u542C\u4E2D",
+  holdToTalk: "\u6309\u4F4F\u8BF4\u8BDD",
+  releaseToSend: "\u677E\u5F00\u53D1\u9001",
+  entering: "\u8FDB\u5165\u4E2D\u2026",
+  voiceBtn: "\u8BED\u97F3",
+  ariaActive: "\u8BED\u97F3\u6A21\u5F0F\u8FDB\u884C\u4E2D",
+  ariaEnter: "\u8FDB\u5165\u8BED\u97F3\u5BF9\u8BDD\u6A21\u5F0F",
+  titleHold: "\u8BED\u97F3\u6A21\u5F0F\u8FDB\u884C\u4E2D \xB7 \u6309\u4F4F\u8BF4\u8BDD\u3001\u677E\u624B\u53D1\u9001\uFF1B\u77ED\u6309\u9000\u51FA\uFF1BEsc/\u5931\u53BB\u7126\u70B9\u653E\u5F03\uFF1BCtrl+Shift+V \u9000\u51FA",
+  titleToggle: "\u8BED\u97F3\u6A21\u5F0F\u8FDB\u884C\u4E2D \xB7 \u70B9\u51FB\u9000\u51FA\uFF08Ctrl+Shift+V\uFF09\xB7 \u8BF4\u8BDD\u65F6\u6309\u4F4F Ctrl \u7ACB\u5373\u53D1\u9001",
+  titleEnter: "\u8FDB\u5165\u8BED\u97F3\u5BF9\u8BDD\u6A21\u5F0F\uFF08Ctrl+Shift+V\uFF09",
+  loadingModel: "\u6B63\u5728\u52A0\u8F7D\u6A21\u578B\u2026",
+  listening: "\u8046\u542C\u4E2D\u2026",
+  thinking: "\u601D\u8003\u4E2D\u2026",
+  barHold: "\u8BED\u97F3\u6A21\u5F0F \xB7 \u6309\u4F4F\u8BF4\u8BDD\uFF08\u77ED\u6309\u9000\u51FA\uFF09",
+  barListening: "\u8BED\u97F3\u6A21\u5F0F \xB7 \u8046\u542C\u4E2D\u2026",
+  wakeWord: "\u5524\u9192\u8BCD",
+  sayWake: "\u8BF4\u300C{wake}\u300D\u5F00\u59CB",
+  reading: "\u6717\u8BFB\u4E2D\u2026",
+  recognitionFail: "\u8BC6\u522B\u5931\u8D25\uFF0C\u8BF7\u91CD\u8BD5",
+  partialFail: "\u5B9E\u65F6\u5B57\u5E55\u6682\u65F6\u4E0D\u53EF\u7528\uFF08\u8BC6\u522B\u901A\u9053\u5F02\u5E38\uFF0C\u91CD\u8BD5\u4E2D\uFF09",
+  detectFail: "\u6253\u65AD\u68C0\u6D4B\u6682\u65F6\u4E0D\u53EF\u7528\uFF08\u68C0\u6D4B\u901A\u9053\u5F02\u5E38\uFF0C\u91CD\u8BD5\u4E2D\uFF09",
+  sseReconnect: "\u72B6\u6001\u540C\u6B65\u65AD\u8FDE\uFF0C\u91CD\u8FDE\u4E2D\u2026",
+  diagCopy: "\u590D\u5236\u8BCA\u65AD",
+  diagCopied: "\u8BCA\u65AD\u4FE1\u606F\u5DF2\u590D\u5236",
+  diagCopyFailed: "\u590D\u5236\u5931\u8D25\uFF08\u6D4F\u89C8\u5668\u62D2\u7EDD\u4E86\u526A\u8D34\u677F\uFF09",
+  sessionExpired: "\u8BED\u97F3\u4F1A\u8BDD\u5DF2\u65AD\u5F00\uFF0C\u6B63\u5728\u91CD\u8FDE\u2026",
+  sessionExpiredFail: "\u8BED\u97F3\u4F1A\u8BDD\u91CD\u8FDE\u5931\u8D25\uFF0C\u8BF7\u91CD\u65B0\u5F00\u542F\u8BED\u97F3\u6A21\u5F0F",
+  modelDownloadFail: "\u8BED\u97F3\u6A21\u578B\u4E0B\u8F7D\u5931\u8D25\uFF08{file}\uFF09\uFF1A\u8BF7\u68C0\u67E5\u7F51\u7EDC\u540E\u91CD\u65B0\u8FDB\u5165\u8BED\u97F3\u6A21\u5F0F\u91CD\u8BD5",
+  startFail: "\u8BED\u97F3\u6A21\u5F0F\u542F\u52A8\u5931\u8D25\uFF1A{err}",
+  holdDots: "\u6309\u4F4F\u8BF4\u8BDD\u2026",
+  exit: "\u9000\u51FA",
+  configUnavailableNote: "\uFF08\u8BBE\u7F6E\u6587\u6863\u672A\u5C31\u7EEA\uFF0C\u6B63\u5728\u91CD\u8BD5\uFF1B\u9762\u677F\u5C31\u7EEA\u540E\u4F1A\u81EA\u52A8\u51FA\u73B0\uFF09\u3002",
+  // settings-form
+  previewNameFirst: "\u8BF7\u5148\u586B\u5199\u97F3\u8272\u540D\uFF08ShortName\uFF09",
+  previewDisabled: "\u8BED\u97F3\u6A21\u5F0F\u5DF2\u7981\u7528\uFF08\u63D2\u4EF6 enabled=false\uFF09\uFF0C\u65E0\u6CD5\u8BD5\u542C",
+  // 批 G 任务 6：本地 TTS 引擎未下载模型时禁用试听按钮 + 提示。
+  previewModelMissing: "\u8BF7\u5148\u4E0B\u8F7D\u672C\u5730\u6A21\u578B\uFF08\u89C1\u4E0A\u65B9\u300C\u6717\u8BFB\u5F15\u64CE\u300D\u72B6\u6001\uFF09",
+  previewModelLoading: "\u672C\u5730\u6A21\u578B\u6B63\u5728\u4E0B\u8F7D\u4E2D\uFF0C\u8BF7\u7A0D\u5019",
+  previewPlayFail: "\u8BD5\u542C\u5931\u8D25\uFF1A\u65E0\u6CD5\u64AD\u653E\u8BE5\u97F3\u8272",
+  previewAutoplay: "\u6D4F\u89C8\u5668\u62E6\u622A\u4E86\u81EA\u52A8\u64AD\u653E\uFF0C\u8BF7\u518D\u70B9\u4E00\u6B21\u8BD5\u542C",
+  previewCheck: "\u8BD5\u542C\u5931\u8D25\uFF1A\u8BF7\u68C0\u67E5\u7F51\u7EDC\u6216\u97F3\u8272\u540D\uFF08ShortName\uFF09\u662F\u5426\u6B63\u786E",
+  previewRateLimited: "\u8BD5\u542C\u592A\u9891\u7E41\u4E86\uFF0C\u7A0D\u5019\u51E0\u79D2\u518D\u70B9\uFF08\u6BCF\u5206\u949F\u9650 20 \u6B21\uFF09",
+  previewTimeout: "\u5408\u6210\u8D85\u65F6\uFF1A\u6A21\u578B\u4ECD\u5728\u52A0\u8F7D\uFF0C\u8BF7\u7A0D\u5019\u51E0\u79D2\u518D\u8BD5",
+  previewBtnTitle: "\u8BD5\u542C\u5F53\u524D\u97F3\u8272\uFF08\u5F53\u524D\u8BED\u901F\uFF09",
+  synthesizing: "\u5408\u6210\u4E2D\u2026",
+  preview: "\u8BD5\u542C",
+  custom: "\u81EA\u5B9A\u4E49",
+  // settings rows
+  voicePrev: "\u4E0A\u4E00\u97F3\u8272",
+  voiceNext: "\u4E0B\u4E00\u97F3\u8272",
+  descVoice: "Edge \u4E91\u7AEF\u97F3\u8272\uFF08\u8FDB\u5165\u65F6\u81EA\u52A8\u52A0\u8F7D\u5FAE\u8F6F\u5168\u90E8\u97F3\u8272\uFF0C\u5E38\u7528\u4E2D\u6587\u97F3\u8272\u7F6E\u9876\uFF0C\u4E0B\u62C9\u6216 \u25C0\u25B6 \u9009\uFF1B\u4E5F\u53EF\u300C\u81EA\u5B9A\u4E49\u300D\u586B ShortName\uFF09",
+  descVoiceLocal: "\u672C\u5730\u97F3\u8272\uFF08vits \u4E94\u4E2A\u8BF4\u8BDD\u4EBA\u5168\u90E8\u5217\u51FA\uFF0C\u4E0B\u62C9\u9009\u6216 \u25C0\u25B6 \u5207\u6362\uFF1B\u65E0\u9700\u81EA\u5B9A\u4E49\uFF09",
+  descTtsEngine: "\u672C\u5730 VITS\uFF08\u7EAF\u4E2D\u6587\uFF09/ \u672C\u5730 Kokoro\uFF08\u4E2D\u82F1\u5747\u53EF\uFF09/ Edge \u4E91\u7AEF\uFF08\u97F3\u8D28\u6700\u81EA\u7136\uFF0C\u6587\u672C\u4E0A\u5FAE\u8F6F\uFF09",
+  engineVits: "\u672C\u5730 VITS",
+  engineKokoro: "\u672C\u5730\u4E2D\u82F1",
+  engineEdge: "Edge \u4E91\u7AEF",
+  descVoiceKokoro: "Kokoro \u4E2D\u82F1\u97F3\u8272\uFF08103 \u4E2A\u5168\u90E8\u5217\u51FA\uFF0C\u4E0B\u62C9\u9009\u6216 \u25C0\u25B6 \u5207\u6362\uFF1B48-51 \u4E2D\u6587\u540D\uFF0C\u5176\u4F59\u6309\u7F16\u53F7+\u5B9E\u6D4B\u6027\u522B\u6807\u6CE8\uFF0C\u4E2D\u82F1\u6DF7\u8BFB\u5747\u53EF\uFF09",
+  descRate: "\u6717\u8BFB\u8BED\u901F\u500D\u7387\uFF080.5 \u6162\u901F \uFF5E 2.0 \u5FEB\u901F\uFF0C1.1 \u9ED8\u8BA4\uFF1B\u8BA9\u56DE\u590D\u66F4\u7D27\u51D1\uFF09",
+  descInterrupt: "\u53D1\u58F0\u6253\u65AD\u7075\u654F\u5EA6\uFF080 \u9AD8\u95E8\u69DB \u22480.3s \u786E\u8BA4 / 1 \u4E2D\u95E8\u69DB \u22480.2s / 2 \u4F4E\u95E8\u69DB \u22480.1s\uFF0C\u6700\u7075\u654F\uFF09\uFF1B\u503C\u8D8A\u4F4E\u95E8\u69DB\u8D8A\u9AD8\uFF0C\u8D8A\u96BE\u6253\u65AD",
+  descBargeIn: "\u6253\u65AD\u65B9\u5F0F\uFF08detect \u81EA\u52A8\u63A2\u6D4B\u672C\u673A\u56DE\u58F0\u6D88\u9664\u72B6\u6001\u3001\u672A\u751F\u6548\u65F6\u5207\u4E3A\u957F\u6309\u6253\u65AD\uFF0C\u9ED8\u8BA4\uFF1Bauto \u5F3A\u5236\u81EA\u52A8\u6253\u65AD\uFF1A\u5F00\u53E3\u5373\u6253\u65AD\uFF0C\u8033\u673A/\u5B89\u9759\u73AF\u5883\u63A8\u8350\uFF1Bmanual \u624B\u52A8\u6253\u65AD\uFF1A\u5916\u653E\u63A8\u8350\u2014\u2014\u56DE\u58F0\u4E0D\u4F1A\u8BEF\u89E6\u53D1\u81EA\u6253\u65AD\uFF0C\u6309\u4F4F\u9EA6\u514B\u98CE/Ctrl \u663E\u5F0F\u6253\u65AD\uFF09\u3002\u6CE8\u610F\uFF1Amanual\uFF08detect \u5728\u65E0\u539F\u751F\u56DE\u58F0\u6D88\u9664\u7684\u673A\u5668\u4E0A\u4E5F\u4F1A\u81EA\u52A8\u843D\u5165\uFF09\u4E0B\u975E\u6309\u538B\u671F\u7684\u8BED\u97F3\u4E0D\u88AB\u8BC6\u522B\u2014\u2014toggle \u6A21\u5F0F\u4EC5\u64AD\u653E\u4E2D\u53EF\u957F\u6309\u8BF4\u8BDD\uFF0C\u5F85\u673A\u65F6\u65E0\u6CD5\u8BED\u97F3\u8F93\u5165\uFF0C\u8BF7\u6539\u7528 hold \u6A21\u5F0F\u6216 auto/detect",
+  bargeInDetect: "\u81EA\u52A8\u63A2\u6D4B",
+  bargeInAuto: "\u81EA\u52A8",
+  bargeInManual: "\u624B\u52A8",
+  descEchoGate: "\u56DE\u58F0\u95E8\u63A7\u9608\u503C\uFF08dB\uFF0C\u9ED8\u8BA4 6\uFF09\uFF1A\u81EA\u52A8\u6253\u65AD\u8981\u6C42\u6B8B\u5DEE\u9AD8\u4E8E\u56DE\u58F0\u5730\u677F\u6B64\u503C\u3002\u5F53\u524D ASR \u6A21\u578B\u9ED8\u8BA4\u539F\u751F AEC \u751F\u6548\u65F6\u6B64\u95E8\u63A7\u95F2\u7F6E\uFF1BSafari / \u8033\u673A\u7B49\u65E0\u539F\u751F AEC \u73AF\u5883\u4F1A\u515C\u5E95\u751F\u6548\u3002\u5916\u653E\u4ECD\u8BEF\u6253\u65AD\u8C03\u5927\uFF088~10\uFF09\uFF0C\u592A\u96BE\u6253\u65AD\u8C03\u5C0F\uFF083~4\uFF09",
+  descShortcut: "\u8FDB\u5165/\u9000\u51FA\u8BED\u97F3\u6A21\u5F0F\u7684\u5FEB\u6377\u952E\uFF08\u5F62\u5982 Ctrl+Shift+V\uFF1B\u7559\u7A7A\u7981\u7528\u5FEB\u6377\u952E\uFF0C\u53EA\u7528\u9EA6\u514B\u98CE\u6309\u94AE\uFF1B\u907F\u514D\u6D4F\u89C8\u5668\u4FDD\u7559\u7EC4\u5408\u5982 Ctrl+W/N/T\uFF09",
+  vadDetected: "VAD \u68C0\u6D4B\u5230\u8BED\u97F3",
+  aecOff: "\u539F\u751F\u56DE\u58F0\u6D88\u9664\u672A\u751F\u6548",
+  aecOffHint: "\u6D4F\u89C8\u5668\u539F\u751F\u56DE\u58F0\u6D88\u9664\u672A\u751F\u6548\uFF08\u5916\u653E\u53EF\u80FD\u81EA\u6253\u65AD\uFF09\uFF0C\u5EFA\u8BAE\u7528\u8033\u673A\u6216\u5207\u6362\u300C\u624B\u52A8\u6253\u65AD\u300D",
+  // 批 7O（ADR-0006）：detect 模式第一级探测降级提示（状态条）。
+  bargeInDetectFallback: "\u672C\u673A\u56DE\u58F0\u6D88\u9664\u672A\u751F\u6548\uFF0C\u5DF2\u5207\u4E3A\u957F\u6309\u6253\u65AD",
+  // R1 收尾（fix-client 直连 tk() 调用）：连续 3 次回声拒断的解释出口 + 快捷键非法停用提示。
+  echoRejectHint: "\u56DE\u58F0\u8F83\u5F3A\uFF0C\u6253\u65AD\u53EF\u80FD\u4E0D\u7075\u654F\u2014\u2014\u8FD9\u662F\u56DE\u58F0\u9632\u62A4\u5728\u751F\u6548\uFF0C\u53EF\u6234\u8033\u673A\u6216\u6539\u7528\u300C\u624B\u52A8\u6253\u65AD\u300D",
+  shortcutInvalid: "\u5FEB\u6377\u952E\u65E0\u6548\uFF0C\u5DF2\u505C\u7528\uFF08\u53EF\u5728\u8BBE\u7F6E\u91CC\u6539\u4E3A\u5982 Ctrl+Shift+V\uFF1B\u7559\u7A7A\u8868\u793A\u53EA\u7528\u9EA6\u514B\u98CE\u6309\u94AE\uFF09",
+  descComposerShortcut: "\u8F93\u5165\u6846\u6709\u7126\u70B9\u65F6\u7684\u5207\u6362\u5FEB\u6377\u952E\uFF08\u9ED8\u8BA4 Alt/Option+Enter\uFF1B\u7559\u7A7A\u5219\u53EA\u5728\u8F93\u5165\u6846\u5916\u751F\u6548\uFF09",
+  composerShortcutLabel: "\u8FDB\u5165 / \u9000\u51FA\u8BED\u97F3\u6A21\u5F0F\uFF08\u8F93\u5165\u6846\u5185\uFF09",
+  shortcutRecord: "\u5F55\u5236",
+  shortcutRecording: "\u6309\u4E0B\u7EC4\u5408\u952E\u2026",
+  shortcutCancel: "\u53D6\u6D88",
+  shortcutNeedModifier: "\u9700\u8981\u81F3\u5C11\u4E00\u4E2A\u4FEE\u9970\u952E",
+  shortcutUnsupportedKey: "\u53EA\u652F\u6301\u5B57\u6BCD\u3001\u6570\u5B57\u3001Enter\u3001Space\u3001Tab",
+  shortcutPlaceholder: "\u70B9\u5F55\u5236\u540E\u6309\u7EC4\u5408\u952E",
+  shortcutReset: "\u6062\u590D\u9ED8\u8BA4",
+  shortcutNote: "\u8F93\u5165\u6846\u5185\u53EF\u7528 Alt/Option+Enter \u5207\u6362\uFF1B\u652F\u6301 Cmd / Ctrl / Alt / Shift \u7EC4\u5408\uFF1B\u7559\u7A7A\u8868\u793A\u53EA\u7528\u9EA6\u514B\u98CE\u6309\u94AE\u3002\u5F55\u5236\u65F6 Backspace \u6E05\u7A7A\u3001Esc \u53D6\u6D88\uFF1B\u907F\u514D\u6D4F\u89C8\u5668\u5360\u7528\u7684\u7EC4\u5408\uFF08\u5982 Cmd+W / T / N / L\uFF09\u3002\u4FEE\u6539\u540E\u7ACB\u5373\u751F\u6548\uFF0C\u65E0\u9700\u5237\u65B0\u3002",
+  secShortcut: "\u5FEB\u6377\u952E",
+  elapsedHint: "\u5F53\u524D\u8BED\u97F3\u4F1A\u8BDD\u5DF2\u7528\u65F6\u957F",
+  botLevelsHint: "AI \u6717\u8BFB\u97F3\u91CF\uFF08\u84DD\u8272\u6761 = \u6717\u8BFB\uFF0C\u7EFF\u8272\u6761 = \u9EA6\u514B\u98CE\uFF09",
+  interruptConfirm: "\u6253\u65AD\u786E\u8BA4",
+  sev0: "0 \u9AD8\u95E8\u69DB",
+  sev1: "1 \u4E2D",
+  sev2: "2 \u4F4E",
+  // 数值单位（设置卡片「当前生效值」用：中文汉字单位、英文国际缩写，避免「1500 ms」直出）
+  unitMs: "\u6BEB\u79D2",
+  unitMin: "\u5206\u949F",
+  unitDb: "\u5206\u8D1D",
+  descSilence: "\u8BF4\u5B8C\u6574\u4E00\u53E5\u7684\u9759\u97F3\u505C\u987F\u6BEB\u79D2\u6570\uFF08\u9ED8\u8BA4 1500 \u6BEB\u79D2\uFF0C\u7ED9\u601D\u8003\u505C\u987F\u7559\u7A7A\u95F4\uFF1B\u81F3\u5C11 250ms \u8BED\u97F3\u624D\u5224\u53E5\uFF0C\u9632\u77ED\u4FC3\u566A\u58F0\u8BEF\u89E6\u53D1\uFF09",
+  descIdle: "\u65E0\u6D3B\u52A8\u81EA\u52A8\u9000\u51FA\u8BED\u97F3\u6A21\u5F0F\u7684\u5206\u949F\u6570\uFF08\u9ED8\u8BA4 5\uFF1B\u9000\u51FA\u524D 30 \u79D2\u4F1A\u6709\u5012\u6570\u9884\u8B66\uFF09",
+  descModelHost: "ASR \u6A21\u578B\u4E0B\u8F7D\u6E90\uFF08\u5B98\u65B9\u6E90 / \u56FD\u5185\u955C\u50CF\uFF0C\u6216\u9009\u300C\u81EA\u5B9A\u4E49\u300D\u586B\u4EFB\u610F\u955C\u50CF\uFF09",
+  descAutoSend: "\u9759\u97F3\u5230\u70B9\u81EA\u52A8\u53D1\u9001\uFF08\u8FDE\u7EED\u591A\u6BB5\u62FC\u6210\u4E00\u6761\uFF1B\u5173=\u53EA\u8FDB\u8349\u7A3F\uFF1B\u8BF4\u8BDD\u8FC7\u7A0B\u4E2D\u6309\u4F4F Ctrl \u53EF\u7ACB\u5373\u53D1\u9001\uFF0Chold \u6A21\u5F0F\u677E\u624B\u5373\u53D1\u9001\uFF09",
+  // 批 7N 重做 5/5：明确「开启后下次进入语音会话即生效」——消除「点完为何不立即恢复」的预期差。
+  descAutoResume: "\u5207\u6362\u56DE\u4E0A\u6B21\u8BED\u97F3\u4F1A\u8BDD\u65F6\u81EA\u52A8\u6062\u590D\u8BED\u97F3\u6A21\u5F0F\uFF08\u9ED8\u8BA4\u5173\uFF1B\u5F00\u542F\u540E\u4E0B\u6B21\u8FDB\u5165\u8BED\u97F3\u4F1A\u8BDD\u5373\u751F\u6548\u2014\u2014\u81EA\u52A8\u8FDB\u5165\u8BED\u97F3\u6A21\u5F0F + \u6062\u590D\u4E0A\u6B21\u4F1A\u8BDD\uFF1B\u5173\u95ED\u5219\u9700\u624B\u52A8\u6309 Ctrl+Shift+V \u91CD\u65B0\u8FDB\u5165\uFF09",
+  descSpokenFormat: "\u8BED\u97F3\u4F1A\u8BDD\u6CE8\u5165\u53E3\u8BED\u5316\u63D0\u793A\u8BCD\uFF08\u56DE\u590D\u53E3\u8BED\u5316\u3001\u77ED\u53E5\u3001\u4E0D\u7528 Markdown \u6392\u7248\u7B26\u53F7\uFF0C\u6717\u8BFB\u66F4\u987A\u66F4\u5FEB\uFF1B\u9ED8\u8BA4\u5F00\uFF0C\u6539\u52A8\u5373\u65F6\u751F\u6548\uFF09",
+  descSenseVoice: "\u8BC6\u522B\u6A21\u5F0F\uFF1A\u5F00 = \u51C6\u786E\u6A21\u5F0F\uFF08SenseVoice \u5B9A\u7A3F\uFF0C\u5E26\u6807\u70B9+\u6570\u5B57\u5F52\u4E00\u5316\uFF0C\u957F\u53E5\u5728 CPU \u4E0A\u53EF\u80FD\u7B49\u6570\u79D2\uFF09\uFF1B\u5173 = \u5FEB\u901F\u6A21\u5F0F\uFF08\u6D41\u5F0F\u7ED3\u679C\u76F4\u63A5\u5B9A\u7A3F\uFF0C\u4E0D\u7B49 228MB \u91CD\u8BD1\u6A21\u578B\uFF0C\u51C6\u786E\u5EA6\u7565\u964D\uFF09",
+  recognizingSec: "\u8BC6\u522B\u4E2D\u2026 {sec}s",
+  descToolBeep: '\u5DE5\u5177\u8C03\u7528\u63D0\u793A\u97F3\uFF08\u9ED8\u8BA4\u5173\uFF09\uFF1AAI \u601D\u8003/\u8C03\u7528\u5DE5\u5177\u65F6"\u6EF4"\u4E00\u58F0\uFF1B\u5ACC\u5435\u5C31\u4FDD\u6301\u5173\u95ED',
+  descSenseITN: "SenseVoice \u6570\u5B57/\u65E5\u671F/\u683C\u5F0F\u89C4\u8303\u5316\uFF08\u9ED8\u8BA4\u5F00\uFF1B\u5173\u95ED\u540E\u8F93\u51FA\u66F4\u63A5\u8FD1\u53E3\u8BED\u539F\u6587\uFF09",
+  descCaptionFontSize: "\u6D6E\u5C42\u5B57\u5E55\u5B57\u53F7\u6863\u4F4D\uFF08\u5C0F 12 / \u6807\u51C6 14 / \u5927 18 / \u7279\u5927 24 px\uFF1B\u9ED8\u8BA4\u5C0F\u4E0E\u73B0\u72B6\u5B57\u8282\u7B49\u4EF7\uFF09",
+  descCaptionMaxWidth: "\u6D6E\u5C42\u5B57\u5E55\u5BBD\u5EA6\u6863\u4F4D\uFF0850vw / 70vw / 90vw\uFF1B\u9ED8\u8BA4 70vw\uFF1B24px \u591A\u884C\u65F6\u53D7 30vh \u9AD8\u5EA6\u7EA6\u675F\u4E0D\u76D6\u8F93\u5165\u6846\uFF09",
+  captionSizeS: "\u5C0F",
+  captionSizeM: "\u6807\u51C6",
+  captionSizeL: "\u5927",
+  captionSizeXL: "\u7279\u5927",
+  captionWidth50: "\u7A84",
+  captionWidth70: "\u4E2D",
+  captionWidth90: "\u5BBD",
+  // 跳过按钮：只跳当前 TTS 句（非整段朗读）——UX 审查歧义修正。
+  skipReading: "\u8DF3\u8FC7\u672C\u53E5",
+  descBackchannelYield: "\u6717\u8BFB\u671F\u7528\u6237\u8BF4\u300C\u55EF/\u5BF9\u300D\u7B49\u77ED\u5E94\u7B54\u65F6\u81EA\u52A8\u8BA9\u4F4D\uFF08\u8DF3\u8FC7\u5F53\u524D TTS \u53E5 + \u77ED\u6682\u4E22\u5E27 1.5s\uFF1B\u771F\u8981\u8BF4\u5219\u539F hardBreak \u63A5\u7BA1\uFF1B\u5173 = \u4E0D\u8BA9\u4F4D\uFF0C\u884C\u4E3A\u7B49\u540C\u6539\u9020\u524D\uFF09\u3002\u4EC5\u300C\u6309\u4F4F\u8BF4\u8BDD\u300D\u6A21\u5F0F\u64AD\u653E\u671F\u53EF\u89E6\u53D1\uFF1A\u300C\u6301\u7EED\u8046\u542C\u300D\u6A21\u5F0F\u64AD\u653E\u671F\u4E0D\u8BC6\u522B\u8BED\u97F3\uFF0C\u5F00\u53E3\u8BF4\u8BDD\u6309\u6253\u65AD\u5904\u7406",
+  // Issue #15 批 1 / ADR-0012：打断语音抢救。
+  descBargeInSalvage: "AI \u6717\u8BFB\u65F6\u4F60\u5F00\u53E3\u6253\u65AD\uFF1A\u81EA\u52A8\u4FDD\u7559\u4ECE\u5F00\u53E3\u5230\u6253\u65AD\u751F\u6548\u4E4B\u95F4\u4F60\u8BF4\u7684\u8BDD\uFF0C\u5E76\u5165\u8BC6\u522B\u7EE7\u7EED\u53D1\u9001\uFF08\u4FEE\u300C\u6253\u65AD\u5403\u53E5\u300D\uFF1B\u5173 = \u4E22\u5F03\u6253\u65AD\u524D\u8BED\u97F3\u2014\u2014\u4EC5\u5916\u653E\u4E14\u65E0\u56DE\u58F0\u6D88\u9664\u7684\u73AF\u5883\u5EFA\u8BAE\u5173\uFF09",
+  descLlmCorrect: "\u53D1\u9001\u524D\u7528\u5927\u6A21\u578B\u5BF9\u6574\u6761\u8BED\u97F3\u6587\u672C\u505A\u4E00\u6B21\u7EA0\u9519\uFF08\u53EA\u6539\u9519\u522B\u5B57/\u540C\u97F3\u5B57/\u6807\u70B9\uFF0C\u4FDD\u6301\u539F\u610F\uFF1B\u9700\u5BBF\u4E3B\u5DF2\u914D\u7F6E\u9ED8\u8BA4\u6A21\u578B\uFF0C\u672A\u914D\u7F6E\u5219\u81EA\u52A8\u7528\u539F\u6587\uFF09\u3002\u5F00 = \u6BCF\u6761\u6D88\u606F\u591A\u4E00\u6B21\u7EA0\u9519\u7B49\u5F85\uFF1A\u901A\u5E38 1 \u79D2\u5185\uFF0C\u6700\u957F\u7EA6 10 \u79D2\uFF1B\u6BCF\u5206\u949F\u6700\u591A 10 \u6B21\uFF0C\u8BED\u97F3\u6A21\u5F0F\u5173\u95ED\u6216\u89E6\u53D1\u9650\u6D41\u65F6\u6309\u539F\u6587\u53D1\u9001\u3002\u7EA0\u9519\u5931\u8D25\u6216\u8F93\u51FA\u5F02\u5E38\u540C\u6837\u81EA\u52A8\u7528\u539F\u6587",
+  descYieldMs: "\u8BA9\u4F4D\u8BED\u4E49\u89E6\u53D1\u540E\u7B49\u5F85\u65F6\u957F\uFF08\u6BEB\u79D2\uFF0C500-3000\uFF0C\u9ED8\u8BA4 1500\uFF1B\u7A97\u53E3\u5185\u7528\u6237\u771F\u8981\u8BF4\u5219\u539F hardBreak \u63A5\u7BA1\uFF0C\u7A97\u53E3\u5230\u70B9\u81EA\u52A8\u6062\u590D\u64AD\u653E\uFF09\u3002\u4EC5\u300C\u6309\u4F4F\u8BF4\u8BDD\u300D\u6A21\u5F0F\u64AD\u653E\u671F\u53EF\u89E6\u53D1",
+  descMode: "\u4EA4\u4E92\u6A21\u5F0F\uFF08toggle \u6301\u7EED\u8046\u542C+\u9759\u97F3\u65AD\u53E5 / hold \u6309\u4F4F\u8BF4\u8BDD / once \u8BF4\u5B8C\u4E00\u6BB5\u3001\u7B49\u56DE\u590D\u6717\u8BFB\u5B8C\u518D\u81EA\u52A8\u9000\u51FA\uFF09",
+  modeToggle: "\u6301\u7EED\u8046\u542C",
+  modeHold: "\u6309\u4F4F\u8BF4\u8BDD",
+  modeOnce: "\u8BF4\u5B8C\u5C31\u5173",
+  stopReading: "\u505C\u6B62\u6717\u8BFB",
+  readAloudLabel: "\u6717\u8BFB\u56DE\u590D",
+  readAloudVoice: "\u8BED\u97F3\u6A21\u5F0F",
+  readAloudAlways: "\u603B\u662F",
+  readAloudOff: "\u5173\u95ED",
+  descReadAloud: "\u8BED\u97F3\u6A21\u5F0F=\u53EA\u5728\u8BED\u97F3\u6A21\u5F0F\u91CC\u6717\u8BFB\uFF08\u9ED8\u8BA4\uFF09\uFF1B\u603B\u662F=\u5F53\u524D\u4F1A\u8BDD\u7684\u6BCF\u6761\u56DE\u590D\u90FD\u6717\u8BFB\uFF08\u542B\u6253\u5B57\u53D1\u9001\u7684\uFF09\uFF1B\u5173\u95ED=\u4ECE\u4E0D\u6717\u8BFB",
+  showCaptionsLabel: "\u5B57\u5E55\u6D6E\u5C42",
+  descShowCaptions: "\u6717\u8BFB\u65F6\u5728\u53F3\u4E0B\u89D2\u663E\u793A\u5F53\u524D\u53E5\u5B50\u7684\u5B57\u5E55\u6D6E\u5C42",
+  showStatusBarLabel: "\u72B6\u6001\u6761",
+  descShowStatusBar: "\u5728\u8F93\u5165\u6846\u4E0A\u65B9\u663E\u793A\u8BED\u97F3\u72B6\u6001\u6761\uFF08\u6CE2\u5F62\u3001\u8BC6\u522B\u6587\u5B57\u3001\u8BA1\u65F6\u3001\u63D0\u793A\u3001\u9000\u51FA\uFF09\uFF1B\u5173\u95ED\u540E\u72B6\u6001\u53EA\u5728\u9EA6\u514B\u98CE\u6309\u94AE\u4E0A\u663E\u793A",
+  descWakeWord: "\u5524\u9192\u8BCD\uFF08\u9ED8\u8BA4\u5173\uFF1B\u5982\u300C\u4F60\u597D\u5C0FD\u300D\uFF09\uFF1A\u8BF4\u51FA\u8BCD\u5934\u624D\u8FDB\u5165\u8BC6\u522B\uFF0C\u907F\u514D\u8BEF\u89E6\u3002\u53EF\u4E0E\u547D\u4EE4\u8FDE\u8BF4\uFF08\u300C\u4F60\u597D\u5C0FD\uFF0C\u5E2E\u6211\u67E5\u5929\u6C14\u300D\u2014\u2014\u8BCD\u5934\u4F1A\u81EA\u52A8\u5265\u6389\u3001\u4E0D\u8FDB\u6D88\u606F\uFF09\uFF1B\u6BCF\u53E5\u65AD\u53E5\u6216\u6253\u65AD\u540E\u9700\u91CD\u8BF4\uFF1B\u4EC5 toggle \u6A21\u5F0F\u751F\u6548\uFF08hold / \u624B\u52A8\u6253\u65AD\u4E0B\u4E0D\u751F\u6548\uFF1Bdetect \u81EA\u52A8\u63A2\u6D4B\u672A\u751F\u6548\u3001\u56DE\u843D manual \u65F6\u540C\u6837\u4E0D\u751F\u6548\u2014\u2014Safari \u7B49\u65E0\u539F\u751F\u56DE\u58F0\u6D88\u9664\u7684\u673A\u5668\u4F1A\u9ED8\u8BA4\u843D\u5230\u8FD9\u4E00\u6863\uFF09\uFF1B\u6717\u8BFB\u671F\u8BF4\u5524\u9192\u8BCD\u4E0D\u89E6\u53D1\uFF08\u6253\u65AD\u4ECD\u6309 VAD \u5F00\u53E3\u5373\u6253\u65AD\uFF09\u3002\u5339\u914D\u5E26\u5BB9\u9519\uFF08\u540C\u97F3\u5B57 / \u524D\u5BFC\u8BED\u6C14\u8BCD\uFF09\uFF0C\u5EFA\u8BAE 3-4 \u5B57\uFF1B\u975E\u4E13\u7528 KWS \u5F15\u64CE\uFF0C\u5608\u6742\u73AF\u5883\u53EF\u80FD\u5EF6\u8FDF\u6216\u8BEF\u6FC0\u6D3B",
+  wakePlaceholder: "\u5982\uFF1A\u4F60\u597D\u5C0FD",
+  settingsCardDesc: "\u6717\u8BFB\u5F15\u64CE / \u97F3\u8272 / \u8BED\u901F / \u6253\u65AD\u7075\u654F\u5EA6 / \u6253\u65AD\u65B9\u5F0F / \u56DE\u58F0\u95E8\u63A7 / \u9759\u97F3\u505C\u987F / \u7A7A\u95F2\u8D85\u65F6 / \u6A21\u578B\u955C\u50CF / \u81EA\u52A8\u53D1\u9001 / \u6717\u8BFB\u56DE\u590D / \u72B6\u6001\u6761 / \u5B57\u5E55\u6D6E\u5C42 / \u81EA\u52A8\u6062\u590D / \u4EA4\u4E92\u6A21\u5F0F / \u5524\u9192\u8BCD / \u5DE5\u5177\u63D0\u793A\u97F3 / \u9006\u6587\u672C\u5F52\u4E00\u5316 / \u5B57\u5E55\u5B57\u53F7 / \u5B57\u5E55\u5BBD\u5EA6 / \u77ED\u5E94\u7B54\u8BA9\u4F4D / \u8BA9\u4F4D\u7A97\u53E3 / \u6253\u65AD\u8BED\u97F3\u62A2\u6551 / LLM \u7EA0\u9519",
+  settingsEffectiveNote: "\u751F\u6548\u65F6\u673A\u5206\u56DB\u6863\uFF1A\u2460 \u5373\u65F6\u2014\u2014\u6717\u8BFB\u5F15\u64CE / \u97F3\u8272 / \u8BED\u901F / Kokoro \u6A21\u578B\u7CBE\u5EA6\uFF08\u5DF2\u7F13\u5B58\u5219\u5373\u65F6\uFF0C\u5426\u5219\u4E0B\u6B21\u4E0B\u8F7D\uFF09/ \u53E3\u8BED\u5316\u63D0\u793A\u8BCD\uFF08\u5BF9\u540E\u7EED\u56DE\u590D\u751F\u6548\uFF09/ \u6717\u8BFB\u56DE\u590D / \u72B6\u6001\u6761 / \u5B57\u5E55\u6D6E\u5C42 / \u6A21\u578B\u955C\u50CF\uFF08\u4E0B\u6B21\u4E0B\u8F7D\u5C1D\u8BD5\u5373\u751F\u6548\uFF09\uFF1B\u2461 \u4E0B\u6B21\u8BC6\u522B\u65F6\u2014\u2014\u5B9A\u7A3F\u91CD\u8BD1\uFF08SenseVoice\uFF09/ \u9006\u6587\u672C\u5F52\u4E00\u5316\uFF1B\u2462 \u4E0B\u4E00\u6BB5\u8BDD\u2014\u2014\u9759\u97F3\u5224\u5B9A\u65F6\u957F\uFF08\u65AD\u53E5\u7AEF\u70B9\uFF1B\u53D1\u9001\u7B49\u5F85\u56FA\u5B9A 1.2 \u79D2\u4E0D\u53D7\u5F71\u54CD\uFF09\uFF1B\u2463 \u4E0B\u6B21\u8FDB\u5165\u8BED\u97F3\u6A21\u5F0F\u2014\u2014\u6253\u65AD\u7075\u654F\u5EA6 / \u6253\u65AD\u65B9\u5F0F / \u56DE\u58F0\u95E8\u63A7 / \u5FEB\u6377\u952E / \u81EA\u52A8\u53D1\u9001 / \u81EA\u52A8\u6062\u590D / \u4EA4\u4E92\u6A21\u5F0F / \u5524\u9192\u8BCD / \u5DE5\u5177\u63D0\u793A\u97F3 / \u5B57\u5E55\u5B57\u53F7 / \u5B57\u5E55\u5BBD\u5EA6 / \u77ED\u5E94\u7B54\u8BA9\u4F4D / \u8BA9\u4F4D\u7A97\u53E3 / \u6253\u65AD\u8BED\u97F3\u62A2\u6551 / LLM \u7EA0\u9519 / \u7A7A\u95F2\u65F6\u957F\u3002\u4E0B\u6B21\u8FDB\u5165\u8BED\u97F3\u6A21\u5F0F\u624D\u751F\u6548\u7684\u9879\u4F1A\u5217\u5728\u5361\u7247\u9876\u90E8\uFF08\u542B\u5F53\u524D\u751F\u6548\u503C\uFF09\u3002",
+  effectivePending: "\u6709 {count} \u9879\u4FEE\u6539\u5C06\u5728\u4E0B\u6B21\u8FDB\u5165\u8BED\u97F3\u6A21\u5F0F\u65F6\u751F\u6548\uFF1A{items}",
+  valueOn: "\u5F00",
+  valueOff: "\u5173",
+  valueQuoted: "\u300C{value}\u300D",
+  effectiveItem: "{label}\uFF08\u5F53\u524D\u751F\u6548 {value}\uFF09",
+  effectiveItemSep: "\u3001",
+  configUnavailable: "\u914D\u7F6E\u6682\u4E0D\u53EF\u7528",
+  // telemetry（P1-5 开发模式延迟埋点状态条：各段耗时标签）
+  telUtteranceEnd: "\u8BF4\u5B8C",
+  telEndpoint: "\u7AEF\u70B9",
+  // 「提交」= 定稿上传发起；「定稿就绪」= 定稿文本可用。两者之间是宿主定稿耗时
+  // （SenseVoice 整段重译），故不得都叫「定稿」——2026-11-03 补 final-ready 时改名。
+  telSubmitted: "\u63D0\u4EA4",
+  telFinalReady: "\u5B9A\u7A3F\u5C31\u7EEA",
+  telFirstTokenLabel: "\u9996Token",
+  telFirstSentence: "\u9996\u53E5",
+  telFirstChunk: "\u9996chunk",
+  telFirstPlayed: "\u9996\u97F3",
+  // 模型管理（设置面板实时状态/重试）
+  modelsTitle: "\u8BED\u97F3\u6A21\u578B",
+  modelsDisabled: "\u5DF2\u5173\u95ED\uFF08\u8BBE\u7F6E\u4E2D\u5F00\u542F\uFF09",
+  modelStreamingAsr: "\u6D41\u5F0F\u8BC6\u522B",
+  modelVad: "\u7AEF\u70B9 VAD",
+  modelSense: "\u5B9A\u7A3F\u91CD\u8BD1",
+  modelsReady: "\u5C31\u7EEA",
+  modelsDownloading: "{file} {percent}%",
+  modelsFail: "\u4E0B\u8F7D\u5931\u8D25\uFF08{sec} \u79D2\u540E\u81EA\u52A8\u91CD\u8BD5\uFF09",
+  modelsMissing: "\u672A\u4E0B\u8F7D",
+  modelsRetry: "\u91CD\u8BD5\u4E0B\u8F7D",
+  modelsRetrying: "\u91CD\u8BD5\u4E2D\u2026",
+  modelsRetryHint: "\u955C\u50CF\u5207\u6362\u6216\u4E0B\u8F7D\u5931\u8D25\u540E\u70B9\u51FB\u7ACB\u5373\u91CD\u8BD5",
+  modelsHint: "\u4E0B\u8F7D/\u8FDB\u5EA6\u5B9E\u65F6\u8DDF\u8FDB\uFF1B\u5931\u8D25\u81EA\u52A8\u9000\u907F 60s \u91CD\u8BD5\u3002\u955C\u50CF\u6E90\u5207\u6362\u540E\u70B9\u300C\u91CD\u8BD5\u4E0B\u8F7D\u300D\u7ACB\u5373\u751F\u6548\uFF1B\u4E5F\u53EF\u7528 npm run prefetch \u9884\u4E0B\u8F7D\u3002",
+  // 朗读引擎状态（设置面板内联展示）
+  engineLoading: "\u52A0\u8F7D\u4E2D\u2026",
+  engineReady: "\u5C31\u7EEA",
+  engineError: "\u52A0\u8F7D\u5931\u8D25",
+  errKokoroNeedsNode: "\u672C\u5730 Kokoro \u65E0\u6CD5\u5728\u5B98\u65B9\u684C\u9762\u7AEF\uFF08Electron\uFF09\u5185\u76F4\u63A5\u8FD0\u884C\uFF1A\u8BF7\u5728\u7CFB\u7EDF PATH \u4E0A\u5B89\u88C5 Node.js \u226518\uFF08\u6216\u8BBE\u73AF\u5883\u53D8\u91CF DSHVM_NODE \u6307\u5411\u5B83\uFF09\uFF0C\u6216\u628A\u6717\u8BFB\u5F15\u64CE\u5207\u6362\u4E3A Edge / \u672C\u5730 VITS\u3002",
+  ttsModelsMissing: "\u672C\u5730\u6A21\u578B\u672A\u5C31\u7EEA",
+  ttsDownload: "\u4E0B\u8F7D",
+  ttsDelete: "\u5220\u9664",
+  ttsDownloading: "\u4E0B\u8F7D\u4E2D\u2026",
+  ttsDeleting: "\u5220\u9664\u4E2D\u2026",
+  ttsDownloadHint: "\u4E0B\u8F7D\u8BE5\u5F15\u64CE\u7684\u672C\u5730\u6A21\u578B\uFF1B\u4E0B\u8F7D\u5B8C\u6210\u540E\u7ACB\u5373\u5C31\u7EEA\uFF0C\u53EF\u8BD5\u542C/\u6717\u8BFB",
+  ttsDeleteHint: "\u5220\u9664\u672C\u5730\u6A21\u578B\uFF08\u91CA\u653E\u7A7A\u95F4\uFF1B\u4E0B\u6B21\u4F7F\u7528\u4F1A\u81EA\u52A8\u91CD\u65B0\u4E0B\u8F7D\uFF09",
+  dataFlowHint: "\u6570\u636E\u6D41\u5411\uFF1AASR \u8BC6\u522B\uFF08zipformer2+SenseVoice\uFF09\u59CB\u7EC8\u672C\u5730\uFF1BTTS \u6717\u8BFB\u53D6\u51B3\u4E8E\u5F15\u64CE\uFF08edge=\u5FAE\u8F6F\u4E91\u7AEF\uFF0Cvits/kokoro=\u672C\u5730\uFF09",
+  kokoroModelInt8: "int8\uFF08\u9ED8\u8BA4\uFF09",
+  kokoroModelFp32: "fp32\uFF08\u97F3\u8D28\u66F4\u597D\uFF09",
+  descKokoroModel: "Kokoro \u6A21\u578B\u7CBE\u5EA6\uFF1Aint8 \u4F53\u79EF\u5C0F/\u52A0\u8F7D\u5FEB\uFF08\u7EAF CPU \u670D\u52A1\u5668\u6216\u4F4E\u5E26\u5BBD\u63A8\u8350\uFF0C\u9ED8\u8BA4\uFF09\uFF1Bfp32 \u97F3\u8D28\u66F4\u597D\u4F46\u7EA6 311MB\u3001\u66F4\u6162\uFF08\u6709\u72EC\u7ACB\u663E\u5361\u6216\u5927\u5185\u5B58\u673A\u5668\u63A8\u8350\uFF09\u3002\u4E24\u6863\u5171\u7528\u540C\u4E00\u5957 103 \u97F3\u8272\uFF0C\u5207\u6362\u5373\u65F6\u751F\u6548\u3002",
+  // 设置分组标题
+  secRead: "\u6717\u8BFB\u4E0E\u97F3\u8272",
+  secInterrupt: "\u6253\u65AD\u4E0E\u9759\u97F3",
+  secInteraction: "\u4EA4\u4E92\u4E0E\u8F93\u5165",
+  secRecognition: "\u8BC6\u522B\u4E0E\u53E3\u8BED",
+  secModel: "\u6A21\u578B\u4E0E\u955C\u50CF",
+  telTotal: "\u5408\u8BA1",
+  // 字段标题镜像键（*Label 后缀）：设置行标题经 settings-form 的 tr(`${name}Label`) 取值。
+  // 批 C 曾与 settings-form 的 FIELD_LABELS 中文双轨并行；整合批已删 FIELD_LABELS，
+  // *Label 键现在是行标题唯一真源（R1 M-2：孪生 base 键已删，防双轨漂移复发）。
+  senseITNLabel: "\u9006\u6587\u672C\u5F52\u4E00\u5316",
+  captionFontSizeLabel: "\u5B57\u5E55\u5B57\u53F7",
+  captionMaxWidthLabel: "\u5B57\u5E55\u5BBD\u5EA6",
+  backchannelYieldLabel: "\u77ED\u5E94\u7B54\u8BA9\u4F4D",
+  // Issue #15 批 1 / ADR-0012：打断语音抢救（行标题键）。
+  bargeInSalvageLabel: "\u6253\u65AD\u8BED\u97F3\u62A2\u6551",
+  llmCorrectLabel: "LLM \u7EA0\u9519",
+  // 让位窗口（行标题键）。
+  yieldMsLabel: "\u8BA9\u4F4D\u7A97\u53E3",
+  // 批 G 任务 2：空闲预警 + 退出提示文案。
+  idleWarn30s: "30 \u79D2\u540E\u81EA\u52A8\u9000\u51FA\uFF08\u8BBE\u7F6E\u91CC\u53EF\u8C03\u7A7A\u95F2\u65F6\u957F\uFF09",
+  idleTimeoutQuit: "\u7A7A\u95F2\u8D85\u65F6\u5DF2\u81EA\u52A8\u9000\u51FA\uFF08\u8BBE\u7F6E\u91CC\u53EF\u8C03\u65F6\u957F\uFF09",
+  // 批 G 任务 1：Number 校验红框 + clamp 提示。
+  numberInvalid: "\u6570\u503C\u975E\u6CD5",
+  numberClamped: "\u5DF2\u81EA\u52A8\u8C03\u6574\u4E3A {value}",
+  // 批 H 任务 4：autoResume 关 + 切回上次语音会话时的引导提示（5s 后自动清）。
+  // 批 7N 重做 2/5：明确「自动恢复」=「自动进入语音模式 + 恢复上次会话」。
+  autoResumeHint: "\u300C\u81EA\u52A8\u6062\u590D\u300D= \u5F00\u542F\u540E\u5207\u6362\u56DE\u4E0A\u6B21\u8BED\u97F3\u4F1A\u8BDD\u4F1A\u81EA\u52A8\u8FDB\u5165\u8BED\u97F3\u6A21\u5F0F\u5E76\u6062\u590D\u4E0A\u6B21\u4F1A\u8BDD\uFF1B\u5173\u95ED\u5219\u9700\u624B\u52A8\u6309 Ctrl+Shift+V",
+  // —— 国际化补全（字段标题/音色描述词/错误码文案/试听分类）——
+  ttsEngineLabel: "\u6717\u8BFB\u5F15\u64CE",
+  kokoroModelLabel: "Kokoro \u6A21\u578B\u7CBE\u5EA6",
+  voiceLabel: "\u97F3\u8272",
+  rateLabel: "\u8BED\u901F",
+  interruptLevelLabel: "\u6253\u65AD\u7075\u654F\u5EA6",
+  bargeInModeLabel: "\u6253\u65AD\u65B9\u5F0F",
+  echoGateDbLabel: "\u56DE\u58F0\u95E8\u63A7",
+  modeLabel: "\u4EA4\u4E92\u6A21\u5F0F",
+  shortcutLabel: "\u8FDB\u5165 / \u9000\u51FA\u8BED\u97F3\u6A21\u5F0F\uFF08\u5E94\u7528\u5185\uFF09",
+  wakeWordLabel: "\u5524\u9192\u8BCD",
+  toolBeepLabel: "\u5DE5\u5177\u63D0\u793A\u97F3",
+  autoSendLabel: "\u81EA\u52A8\u53D1\u9001",
+  autoResumeLabel: "\u81EA\u52A8\u6062\u590D",
+  senseVoiceLabel: "\u5B9A\u7A3F\u91CD\u8BD1",
+  spokenFormatLabel: "\u53E3\u8BED\u5316\u63D0\u793A\u8BCD",
+  silenceMsLabel: "\u9759\u97F3\u505C\u987F",
+  idleTimeoutMinutesLabel: "\u7A7A\u95F2\u8D85\u65F6",
+  modelHostLabel: "\u6A21\u578B\u955C\u50CF",
+  genderFemale: "\u5973",
+  genderMale: "\u7537",
+  genderNeutral: "\u4E2D\u6027",
+  accentMandarin: "\u7B80\u4F53\u4E2D\u6587",
+  accentNortheast: "\u4E1C\u5317\u8BDD",
+  accentShaanxi: "\u9655\u897F\u8BDD",
+  accentCantonese: "\u7CA4\u8BED",
+  accentTaiwan: "\u53F0\u6E7E\u8154",
+  accentEnglish: "English",
+  styleDeep: "\u6DF1\u6C89",
+  styleRich: "\u6D51\u539A",
+  styleClear: "\u6E05\u4EAE",
+  styleMagnetic: "\u78C1\u6027",
+  voiceKokoroPopularMale: "\u5E38\u7528\u7537\u58F0",
+  voiceKokoroChineseFemale: "\u4E2D\u6587\u5973",
+  voiceKokoroMale: "\u7537\u58F0",
+  voiceKokoroFemale: "\u5973\u58F0",
+  voiceKokoroGeneric: "\u97F3\u8272",
+  hostOfficial: "\u5B98\u65B9\u6E90",
+  hostMirror: "\u56FD\u5185\u955C\u50CF",
+  engineBadgeCloud: "\u8BC6\u522B\u672C\u5730 \xB7 \u6717\u8BFB\u4E91\u7AEF",
+  engineBadgeLocal: "\u8BC6\u522B\u672C\u5730 \xB7 \u6717\u8BFB\u672C\u5730",
+  errRateLimited: "\u8BF7\u6C42\u8FC7\u4E8E\u9891\u7E41\uFF0C\u8BF7\u7A0D\u540E\u518D\u8BD5",
+  errUnknownSession: "\u8BED\u97F3\u4F1A\u8BDD\u5DF2\u5931\u6548\uFF0C\u8BF7\u91CD\u65B0\u5F00\u542F\u8BED\u97F3\u6A21\u5F0F",
+  errForbidden: "\u8BF7\u6C42\u88AB\u62D2\u7EDD\uFF08\u4EC5\u9650\u672C\u673A\u8BBF\u95EE\uFF0C\u6216\u6765\u6E90\u4E0D\u7B26\uFF09",
+  errBadRequest: "\u8BF7\u6C42\u65E0\u6548",
+  errMethodNotAllowed: "\u8BF7\u6C42\u65B9\u6CD5\u4E0D\u88AB\u652F\u6301",
+  errEngineNotActive: "\u8BE5\u6717\u8BFB\u5F15\u64CE\u5F53\u524D\u672A\u542F\u7528",
+  errModelDownload: "\u6A21\u578B\u4E0B\u8F7D\u5931\u8D25\uFF1A\u8BF7\u68C0\u67E5\u7F51\u7EDC",
+  errTooManyStreams: "\u8BED\u97F3\u8FDE\u63A5\u8FC7\u591A\uFF0C\u8BF7\u5173\u95ED\u5176\u5B83\u8BED\u97F3\u9875\u9762\u540E\u91CD\u8BD5",
+  errTooLarge: "\u8BF7\u6C42\u5185\u5BB9\u8FC7\u5927",
+  errInternal: "\u670D\u52A1\u51FA\u9519\uFF0C\u8BF7\u7A0D\u540E\u91CD\u8BD5",
+  previewNetwork: "\u8BD5\u542C\u5931\u8D25\uFF1A\u7F51\u7EDC\u4E0D\u53EF\u8FBE\uFF08Edge \u4E91\u7AEF\u9700\u8BBF\u95EE\u5FAE\u8F6F\u8BED\u97F3\u670D\u52A1\uFF09\uFF0C\u8BF7\u68C0\u67E5\u7F51\u7EDC\u6216\u4EE3\u7406",
+  previewEngine: "\u8BD5\u542C\u5931\u8D25\uFF1A\u5F15\u64CE\u672A\u5C31\u7EEA\uFF08\u672C\u5730\u6A21\u578B\u4E0B\u8F7D\u4E2D\u3001\u521D\u59CB\u5316\u5931\u8D25\u6216\u5B50\u8FDB\u7A0B\u5F02\u5E38\uFF09\uFF0C\u8BF7\u7A0D\u540E\u518D\u8BD5\u6216\u5728\u8BBE\u7F6E\u9762\u677F\u67E5\u770B TTS \u72B6\u6001",
+  previewText: "\u8BD5\u542C\u5931\u8D25\uFF1A\u5408\u6210\u5F15\u64CE\u4EA7\u51FA\u7A7A\u97F3\u9891\uFF08\u97F3\u8272\u4E0E\u8BED\u79CD\u53EF\u80FD\u4E0D\u5339\u914D\uFF09\uFF0C\u8BF7\u66F4\u6362\u97F3\u8272\u6216\u68C0\u67E5\u8BED\u8A00\u8BBE\u7F6E",
+  voiceHintChineseVoice: "\u63D0\u793A\uFF1A\u5F53\u524D\u662F\u4E2D\u6587\u97F3\u8272\uFF1B\u82E5\u4E3B\u8981\u7528\u82F1\u6587\u5BF9\u8BDD\uFF0C\u5EFA\u8BAE\u5728\u5217\u8868\u4E2D\u9009\u62E9\u82F1\u6587\u97F3\u8272\uFF08en-\u2026\uFF09\u3002",
+  voiceHintEnglishVoice: "\u63D0\u793A\uFF1A\u5F53\u524D\u662F\u82F1\u6587\u97F3\u8272\uFF0C\u6717\u8BFB\u4E2D\u6587\u56DE\u590D\u6548\u679C\u4E0D\u4F73\uFF1B\u4E2D\u6587\u5BF9\u8BDD\u5EFA\u8BAE\u9009\u62E9\u4E2D\u6587\u97F3\u8272\uFF08zh-\u2026\uFF09\u3002"
+};
 var en = {
   stateVoiceMode: "Voice Mode",
   ttsNoticeFail: "Read-aloud connection failed: retrying\u2026",
@@ -2711,6 +2878,37 @@ var en = {
   voiceHintChineseVoice: "Note: this is a Chinese voice. For English replies, pick an English voice (en-\u2026) from the list.",
   voiceHintEnglishVoice: "Note: this is an English voice and reads Chinese replies poorly. For Chinese conversations, pick a Chinese voice (zh-\u2026)."
 };
+var RU = {
+  // --- чтение и озвучка ---
+  secRead: "\u041E\u0437\u0432\u0443\u0447\u043A\u0430",
+  ttsEngineLabel: "\u0414\u0432\u0438\u0436\u043E\u043A \u043E\u0437\u0432\u0443\u0447\u043A\u0438",
+  descTtsEngine: "\u041B\u043E\u043A\u0430\u043B\u044C\u043D\u044B\u0439 Kokoro (\u0440\u0443\u0441\u0441\u043A\u0438\u0439, \u0433\u043E\u043B\u043E\u0441\u0430 \u041C\u0430\u0448\u0430 \u0438 \u0421\u0432\u0435\u0442\u0430) / \u043B\u043E\u043A\u0430\u043B\u044C\u043D\u044B\u0439 VITS (\u043A\u0438\u0442\u0430\u0439\u0441\u043A\u0438\u0439) / Edge \u2014 \u043E\u0431\u043B\u0430\u043A\u043E Microsoft, \u0442\u0435\u043A\u0441\u0442 \u0443\u0445\u043E\u0434\u0438\u0442 \u043D\u0430\u0440\u0443\u0436\u0443",
+  voiceLabel: "\u0413\u043E\u043B\u043E\u0441",
+  descVoiceKokoro: "\u0420\u0443\u0441\u0441\u043A\u0438\u0435 \u0433\u043E\u043B\u043E\u0441\u0430: \u041C\u0430\u0448\u0430 (\u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E) \u0438 \u0421\u0432\u0435\u0442\u0430. \u041F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u0441\u0442\u0440\u0435\u043B\u043A\u0430\u043C\u0438 \u0438\u043B\u0438 \u0438\u0437 \u0441\u043F\u0438\u0441\u043A\u0430",
+  descVoiceLocal: "\u0413\u043E\u043B\u043E\u0441\u0430 \u043B\u043E\u043A\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0434\u0432\u0438\u0436\u043A\u0430 (\u0432 \u043A\u0438\u0442\u0430\u0439\u0441\u043A\u043E\u0439 \u043C\u043E\u0434\u0435\u043B\u0438 VITS \u2014 \u043F\u044F\u0442\u044C \u0434\u0438\u043A\u0442\u043E\u0440\u043E\u0432)",
+  rateLabel: "\u0421\u043A\u043E\u0440\u043E\u0441\u0442\u044C",
+  descRate: "\u041C\u043D\u043E\u0436\u0438\u0442\u0435\u043B\u044C \u0441\u043A\u043E\u0440\u043E\u0441\u0442\u0438 \u0440\u0435\u0447\u0438: 0.5 \u043C\u0435\u0434\u043B\u0435\u043D\u043D\u043E, 2.0 \u0431\u044B\u0441\u0442\u0440\u043E, \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E 1.0",
+  readAloudLabel: "\u0427\u0438\u0442\u0430\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B",
+  descReadAloud: "\u0412 \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u043C \u0440\u0435\u0436\u0438\u043C\u0435 \u2014 \u0447\u0438\u0442\u0430\u0442\u044C \u0442\u043E\u043B\u044C\u043A\u043E \u0442\u0430\u043C; \u0412\u0441\u0435\u0433\u0434\u0430 \u2014 \u0447\u0438\u0442\u0430\u0442\u044C \u043B\u044E\u0431\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u0432 \u0442\u0435\u043A\u0443\u0449\u0435\u0439 \u0441\u0435\u0441\u0441\u0438\u0438; \u0412\u044B\u043A\u043B\u044E\u0447\u0435\u043D\u043E \u2014 \u043D\u0435 \u0447\u0438\u0442\u0430\u0442\u044C \u043D\u0438\u0447\u0435\u0433\u043E (\u043E\u0437\u0432\u0443\u0447\u043A\u0430 \u043F\u043E \u043A\u043E\u043C\u0430\u043D\u0434\u0435 \u0447\u0435\u0440\u0435\u0437 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442 say)",
+  readAloudVoice: "\u0412 \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u043C \u0440\u0435\u0436\u0438\u043C\u0435",
+  readAloudAlways: "\u0412\u0441\u0435\u0433\u0434\u0430",
+  readAloudOff: "\u0412\u044B\u043A\u043B\u044E\u0447\u0435\u043D\u043E",
+  showCaptionsLabel: "\u0421\u0443\u0431\u0442\u0438\u0442\u0440\u044B",
+  descShowCaptions: "\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u0441\u0443\u0431\u0442\u0438\u0442\u0440\u044B \u043F\u0440\u043E\u0438\u0437\u043D\u043E\u0441\u0438\u043C\u043E\u0433\u043E \u0442\u0435\u043A\u0441\u0442\u0430 \u043F\u043E\u0432\u0435\u0440\u0445 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B",
+  showStatusBarLabel: "\u0421\u0442\u0440\u043E\u043A\u0430 \u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u044F",
+  descShowStatusBar: "\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0435 \u043C\u0438\u043A\u0440\u043E\u0444\u043E\u043D\u0430 \u0438 \u043E\u0437\u0432\u0443\u0447\u043A\u0438",
+  engineKokoro: "\u041B\u043E\u043A\u0430\u043B\u044C\u043D\u044B\u0439 Kokoro",
+  engineVits: "\u041B\u043E\u043A\u0430\u043B\u044C\u043D\u044B\u0439 VITS",
+  engineEdge: "Edge (\u043E\u0431\u043B\u0430\u043A\u043E)",
+  preview: "\u041F\u0440\u043E\u0441\u043B\u0443\u0448\u0430\u0442\u044C",
+  valueOn: "\u0432\u043A\u043B",
+  valueOff: "\u0432\u044B\u043A\u043B"
+};
+for (const [key, value] of Object.entries(RU)) {
+  if (value === void 0) continue;
+  zh[key] = value;
+  en[key] = value;
+}
 
 // src/llm-correct.ts
 function correctionSystem(lang) {
@@ -2797,6 +2995,7 @@ function normalizePromptLang(raw) {
 }
 var SAMPLE_ZH = "\u4F60\u597D\uFF0C\u6B22\u8FCE\u4F7F\u7528\u8BED\u97F3\u6A21\u5F0F\u3002";
 var SAMPLE_EN = "Hello, welcome to voice mode.";
+var SAMPLE_RU = "\u041F\u0440\u0438\u0432\u0435\u0442! \u042D\u0442\u043E \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u0433\u043E \u0433\u043E\u043B\u043E\u0441\u0430. \u041A\u0430\u043A \u0442\u0435\u0431\u0435 \u0437\u0432\u0443\u0447\u0430\u043D\u0438\u0435?";
 var SAMPLE_BY_LANG = {
   zh: SAMPLE_ZH,
   en: SAMPLE_EN,
@@ -2810,17 +3009,60 @@ var SAMPLE_BY_LANG = {
   ru: "\u0417\u0434\u0440\u0430\u0432\u0441\u0442\u0432\u0443\u0439\u0442\u0435, \u0434\u043E\u0431\u0440\u043E \u043F\u043E\u0436\u0430\u043B\u043E\u0432\u0430\u0442\u044C \u0432 \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u043E\u0439 \u0440\u0435\u0436\u0438\u043C."
 };
 function previewSample(engine, voice) {
-  if (engine === "kokoro") return `${SAMPLE_ZH}${SAMPLE_EN}`;
+  if (engine === "kokoro") return SAMPLE_RU;
   if (engine === "vits") return SAMPLE_ZH;
   const m = /^([a-z]{2,3})-/i.exec(voice);
   return m && SAMPLE_BY_LANG[m[1].toLowerCase()] || SAMPLE_EN;
+}
+
+// src/say-tool.ts
+var DESCRIPTION = [
+  "\u041E\u0437\u0432\u0443\u0447\u0438\u0442\u044C \u043A\u043E\u0440\u043E\u0442\u043A\u0443\u044E \u0444\u0440\u0430\u0437\u0443 \u0432\u0441\u043B\u0443\u0445 \u043B\u043E\u043A\u0430\u043B\u044C\u043D\u044B\u043C \u0440\u0443\u0441\u0441\u043A\u0438\u043C \u0433\u043E\u043B\u043E\u0441\u043E\u043C.",
+  "\u0412\u044B\u0437\u044B\u0432\u0430\u0439 \u043F\u043E \u0441\u0432\u043E\u0435\u0439 \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0435: \u0433\u043B\u0430\u0432\u043D\u044B\u0439 \u0432\u044B\u0432\u043E\u0434 \u0438\u043B\u0438 \u0438\u0442\u043E\u0433, \u043F\u0440\u0435\u0434\u0443\u043F\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u0435,",
+  "\u0438\u043B\u0438 \u043A\u043E\u0440\u043E\u0442\u043A\u0430\u044F \u043E\u0442\u043C\u0435\u0442\u043A\u0430 \u043E \u0445\u043E\u0434\u0435 \u0440\u0430\u0431\u043E\u0442\u044B, \u0435\u0441\u043B\u0438 \u043E\u043D\u0430 \u0434\u043B\u0438\u0442\u0441\u044F \u0434\u043E\u043B\u044C\u0448\u0435 \u043D\u0435\u0441\u043A\u043E\u043B\u044C\u043A\u0438\u0445 \u0441\u0435\u043A\u0443\u043D\u0434.",
+  "\u041E\u0434\u043D\u0430-\u0434\u0432\u0435 \u0444\u0440\u0430\u0437\u044B, \u0434\u043E 15-20 \u0441\u043B\u043E\u0432, \u0431\u0435\u0437 markdown, \u0441\u043F\u0438\u0441\u043A\u043E\u0432, \u043A\u043E\u0434\u0430 \u0438 \u0441\u0441\u044B\u043B\u043E\u043A.",
+  "\u041D\u0435 \u0434\u0443\u0431\u043B\u0438\u0440\u0443\u0439 \u0433\u043E\u043B\u043E\u0441\u043E\u043C \u0442\u043E, \u0447\u0442\u043E \u0438 \u0442\u0430\u043A \u0447\u0438\u0442\u0430\u0435\u0442\u0441\u044F \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438.",
+  "\u0412\u043E\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u0441\u0440\u0430\u0437\u0443: \u0441\u0438\u043D\u0442\u0435\u0437 \u0438\u0434\u0451\u0442 \u0432 \u0444\u043E\u043D\u0435, \u0437\u0432\u0443\u043A \u043F\u0440\u0438\u0445\u043E\u0434\u0438\u0442 \u0432 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u043F\u043E \u043C\u0435\u0440\u0435 \u0433\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u0438."
+].join(" ");
+function makeSayTool(options) {
+  return {
+    name: "say",
+    description: DESCRIPTION,
+    parameters: {
+      type: "object",
+      properties: {
+        text: { type: "string", description: "\u0427\u0442\u043E \u043F\u0440\u043E\u0438\u0437\u043D\u0435\u0441\u0442\u0438: \u043A\u043E\u0440\u043E\u0442\u043A\u0430\u044F \u0444\u0440\u0430\u0437\u0430, \u0434\u043E 15-20 \u0441\u043B\u043E\u0432." },
+        voice: { type: "string", description: "\u041D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E: masha (\u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E) \u0438\u043B\u0438 sveta." },
+        rate: { type: "number", description: "\u041D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E: \u0441\u043A\u043E\u0440\u043E\u0441\u0442\u044C 0.5..2, \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E 1." }
+      },
+      required: ["text"]
+    },
+    output: {
+      schema: { type: "string" },
+      render: (_args, value) => [
+        { type: "text", text: String(value) }
+      ]
+    },
+    isConcurrencySafe: () => true,
+    timeoutMs: 15e3,
+    async execute(args) {
+      const a = args ?? {};
+      const text = String(a.text ?? "").trim();
+      if (!text) return "say: \u043F\u0443\u0441\u0442\u043E\u0439 \u0442\u0435\u043A\u0441\u0442, \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0441\u043A\u0430\u0437\u0430\u043D\u043E";
+      if (text.length > 2e3) return "say: \u0442\u0435\u043A\u0441\u0442 \u0434\u043B\u0438\u043D\u043D\u0435\u0435 2000 \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432, \u0441\u043E\u043A\u0440\u0430\u0442\u0438";
+      const voice = typeof a.voice === "string" && a.voice.trim() ? a.voice.trim() : void 0;
+      const rate = typeof a.rate === "number" && Number.isFinite(a.rate) ? Math.min(2, Math.max(0.5, a.rate)) : void 0;
+      options.say(text, voice, rate);
+      return `say: \u043F\u0440\u0438\u043D\u044F\u0442\u043E \u043A \u043E\u0437\u0432\u0443\u0447\u043A\u0435 (${String(text.length)} \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432)`;
+    }
+  };
 }
 
 // src/settings-store.ts
 import { chmodSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join as join4 } from "node:path";
-var SETTINGS_FILE_NAME = "voice-mode.settings.json";
+var SETTINGS_FILE_NAME = "voice-mode-ru.settings.json";
 function settingsFilePath(profileHome) {
   const home = typeof profileHome === "string" && profileHome ? profileHome : process.env.DSH_HOME || join4(homedir(), ".dsh");
   return join4(home, SETTINGS_FILE_NAME);
@@ -2936,13 +3178,14 @@ var respondJson2 = (res, status, payload) => {
   res.end(JSON.stringify(payload));
 };
 var VOICE_SPOKEN_SECTION = "voice-mode:spoken-format";
-var inject = ["webServer", "settings", "sessions"];
+var inject = ["webServer", "settings", "sessions", "tools"];
 var defaultModelCacheDir = () => process.platform === "win32" ? join5(process.env.LOCALAPPDATA ?? join5(homedir2(), "AppData", "Local"), "dsh-voice-mode", "models") : join5(homedir2(), ".cache", "dsh-voice-mode", "models");
 var VOICE_SETTINGS_DEFAULTS = {
-  ttsEngine: "edge",
+  // fork: русский локальный движок и голос Маши по умолчанию.
+  ttsEngine: "kokoro",
   kokoroModel: "int8",
-  voice: "zh-CN-XiaoxiaoNeural",
-  rate: 1.1,
+  voice: "masha",
+  rate: 1,
   interruptLevel: 0,
   silenceMs: 1500,
   idleTimeoutMinutes: 5,
@@ -2960,7 +3203,9 @@ var VOICE_SETTINGS_DEFAULTS = {
   shortcut: "Ctrl+Shift+V",
   composerShortcut: "Alt+Enter",
   spokenFormat: true,
-  senseVoice: true,
+  // fork: SenseVoice не знает русского (zh/en/ja/ko/yue) — уточнение им финальной
+  // фразы портило бы русский текст, поэтому по умолчанию выключено.
+  senseVoice: false,
   wakeWord: "",
   toolBeep: false,
   senseITN: true,
@@ -3632,6 +3877,104 @@ function apply(ctx, config) {
       }
     })
   );
+  let saySeq = 0;
+  let sayChain = Promise.resolve();
+  const sayText = (text, voice, rate) => {
+    const sentences = text.split(/(?<=[.!?…;。])\s+/u).map((s) => s.trim()).filter(Boolean);
+    const chunks = sentences.length > 0 ? sentences : [text];
+    const run = async () => {
+      for (const sentence of chunks) {
+        try {
+          const buf = await queue.synthesize(sentence, { voice, rate });
+          const mime = queue.mime;
+          const seq = ++saySeq;
+          broadcast("audio", {
+            sessionId: "__say__",
+            sentenceId: seq,
+            chunkId: 0,
+            final: false,
+            audio: buf.toString("base64"),
+            mime,
+            say: true
+          });
+          broadcast("audio", {
+            sessionId: "__say__",
+            sentenceId: seq,
+            chunkId: 1,
+            final: true,
+            text: sentence,
+            audio: "",
+            mime,
+            say: true
+          });
+        } catch (e) {
+          console.warn(`[dsh-voice-mode] say failed: ${String(e)}`);
+        }
+      }
+    };
+    sayChain = sayChain.then(run, run);
+  };
+  ctx.effect(
+    () => ctx.webServer.register({
+      kind: "exact",
+      path: `${base}/say`,
+      handler: (req, res) => {
+        if (denyNonLoopback(req, res)) return;
+        if (req.method !== "POST") {
+          res.setHeader("allow", "POST");
+          respondJson2(res, 405, { code: "method_not_allowed", error: "POST required" });
+          return;
+        }
+        if (denyCrossOrigin(req, res)) return;
+        if (!config.enabled) {
+          respondJson2(res, 403, { code: "voice_disabled", error: "voice mode disabled" });
+          return;
+        }
+        collectBody(req, res, MAX_JSON_BODY, (body) => {
+          let text = "";
+          let voice = "";
+          let rate;
+          try {
+            const parsed = JSON.parse(body || "{}");
+            text = String(parsed.text ?? "").trim();
+            voice = String(parsed.voice ?? "").trim();
+            if (typeof parsed.rate === "number" && Number.isFinite(parsed.rate)) {
+              rate = Math.min(2, Math.max(0.5, parsed.rate));
+            }
+          } catch {
+          }
+          if (!text) {
+            respondJson2(res, 400, { code: "bad_request", error: "text required" });
+            return;
+          }
+          if (text.length > 2e3) {
+            respondJson2(res, 400, { code: "bad_request", error: "text too long" });
+            return;
+          }
+          if (!limiter.hit(`say:${clientKey(req)}`, 30, 6e4)) {
+            respondJson2(res, 429, { code: "rate_limited", error: "rate limited" });
+            return;
+          }
+          const sentences = text.split(/(?<=[.!?…;。])\s+/u).map((s) => s.trim()).filter(Boolean);
+          const chunks = sentences.length > 0 ? sentences : [text];
+          respondJson2(res, 200, { ok: true, accepted: true, sentences: chunks.length });
+          sayText(text, voice || void 0, rate);
+        });
+      }
+    })
+  );
+  let sayToolState = "pending";
+  ctx.effect(() => {
+    try {
+      ctx.tools.register(makeSayTool({ say: sayText }));
+      sayToolState = "ok";
+    } catch (e) {
+      sayToolState = e instanceof Error ? `${e.name}: ${e.message}` : String(e);
+      console.warn(`[dsh-voice-mode-ru] say tool not registered: ${sayToolState}`);
+    }
+    return () => {
+    };
+  });
   ctx.effect(
     () => ctx.webServer.register({
       kind: "exact",
@@ -3755,7 +4098,7 @@ function apply(ctx, config) {
       path: `${base}/models/status`,
       handler: (req, res) => {
         if (denyNonLoopback(req, res)) return;
-        respondJson2(res, 200, { ...asr.modelStatus(), tts: queue.status() });
+        respondJson2(res, 200, { ...asr.modelStatus(), tts: queue.status(), sayTool: sayToolState });
       }
     })
   );

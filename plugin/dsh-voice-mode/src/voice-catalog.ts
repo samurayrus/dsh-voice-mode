@@ -52,36 +52,22 @@ export const VITS_SPEAKERS: ReadonlyArray<VitsSpeaker> = [
   { name: 'bazong', sid: 4, zh: '霸总', en: 'Ba Zong', gender: 'M' },
 ]
 
-// ── 本地 Kokoro（sid 0-102，共 103 个；音色只是风格向量，中英文混读对所有编号均可用）──
-/** 各 sid 的基频 F0（Hz，实测；null = 未测）。性别由 F0 阈值（<180Hz 男）推断，个别以听感覆盖。 */
-export const KOKORO_F0: ReadonlyArray<number | null> = [
-  224, 189, 154, 261, 226, 222, 220, 229, 198, 186, 212, 293, 233, 161, 247, 207, 218, 216, 220, 238,
-  242, 229, 198, 286, 211, 190, 264, 261, 226, 147, 216, 240, 233, 188, 222, 247, 253, 270, 276, 276,
-  279, 320, 247, 296, 276, 235, 139, 240, 282, 282, 238, 226, 273, 216, 286, 270, 198, 179, 117, 130,
-  114, 128, 108, 106, 122, 136, 190, 112, 108, 128, 131, 111, 110, 132, 138, 189, 137, 148, 151, 127,
-  135, 111, 138, 114, 125, 158, 128, 156, 132, 162, 131, 136, 142, 124, 129, 136, 126, 135, 161, 150,
-  124, 104, 124,
-]
+// ── fork：本地 Kokoro 换成俄语模型 zaakirio/kokoro-ru（两个女声，sid 0/1）──
+/** 各 sid 的基频 F0（Hz，实测）。俄语包只有 sveta 与 masha 两个音色。 */
+export const KOKORO_F0: ReadonlyArray<number | null> = [196, 208]
 
-/** 有名字的 Kokoro 中文女声（name 为引擎侧英文名）。 */
+/** 俄语音色（name 为引擎侧英文名，host 侧 kokoroVoiceToSid 按它做映射）。 */
 export const KOKORO_NAMED: Readonly<Record<number, { name: string } & BiName>> = {
-  48: { name: 'zf_xiaobei', zh: '小北', en: 'Xiaobei' },
-  49: { name: 'zf_xiaoni', zh: '小妮', en: 'Xiaoni' },
-  50: { name: 'zf_xiaoxiao', zh: '小小', en: 'Xiaoxiao' },
-  51: { name: 'zf_xiaoyi', zh: '小艺', en: 'Xiaoyi' },
+  0: { name: 'sveta', zh: 'Света', en: 'Sveta' },
+  1: { name: 'masha', zh: 'Маша', en: 'Masha' },
 }
 
-/** 用户试听钦定的常用男声（62/68/75/76；75 以听感标男——F0 189Hz 越界不采信）及其风格词键。 */
+/** 俄语包没有男声，保留类型与空表以兼容上层引用。 */
 export type KokoroStyle = 'deep' | 'rich' | 'clear' | 'magnetic'
-export const KOKORO_POPULAR_MALE: Readonly<Record<number, KokoroStyle>> = {
-  62: 'deep',
-  68: 'rich',
-  75: 'clear',
-  76: 'magnetic',
-}
+export const KOKORO_POPULAR_MALE: Readonly<Record<number, KokoroStyle>> = {}
 
-/** 置顶顺序：四个常用男声排在音色列表第一～四位（◀▶ 步进最先到达），其余按编号升序。 */
-export const KOKORO_PINNED: ReadonlyArray<number> = [62, 68, 75, 76]
+/** 置顶顺序：默认音色 masha(1) 排第一，其次 sveta(0)。 */
+export const KOKORO_PINNED: ReadonlyArray<number> = [1, 0]
 
 /** host 侧用：Kokoro 音色 name↔sid 表（置顶在前）。name = 引擎英文名或数字字符串。 */
 export const KOKORO_VOICES: ReadonlyArray<{ name: string; sid: number }> = [

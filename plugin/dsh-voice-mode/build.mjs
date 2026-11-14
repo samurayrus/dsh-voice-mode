@@ -14,7 +14,7 @@ import { parseArgs } from 'node:util'
 const { values } = parseArgs({ options: { outdir: { type: 'string', default: 'lib' } } })
 const outdir = values.outdir
 
-const PKG_ID = 'dsh-voice-mode'
+const PKG_ID = 'dsh-voice-mode-ru'
 
 // 构建版本号：git 短哈希（进入语音模式时打到控制台，供确认运行版本）。
 let BUILD_TAG = 'unknown'
@@ -152,6 +152,10 @@ await buildAtomically({
     '@deepseek-ai/dsh-host-webserver',
     '@deepseek-ai/dsh-llm',
     '@deepseek-ai/dsh-settings',
+    // fork：dsh-tools оставляем external, но импортируем его ТОЛЬКО динамически
+    // (say-tool.ts). Встраивать нельзя — он тянет peer-зависимости хоста;
+    // статический импорт ронял загрузку плагина целиком.
+    '@deepseek-ai/dsh-tools',
     'sherpa-onnx',
     'sherpa-onnx-node',
     'node:*',
@@ -196,6 +200,19 @@ await buildAtomically({
   format: 'cjs',
   platform: 'node',
   external: ['sherpa-onnx', 'sherpa-onnx-node', 'node:*'],
+  logLevel: 'info',
+})
+
+// --- fork 新增：俄语 Kokoro 子进程（espeak-ng G2P → sherpa phonemeCodepoints）。
+// espeak-ng 是 ESM+WASM 包，必须保持外部（动态 import 时才由 Node 解析），
+// 打进 CJS 会让它的 wasm 定位失效。
+await buildAtomically({
+  entryPoints: ['src/ru-tts-worker.ts'],
+  outfile: 'lib/ru-tts-worker.cjs',
+  bundle: true,
+  format: 'cjs',
+  platform: 'node',
+  external: ['sherpa-onnx', 'sherpa-onnx-node', 'espeak-ng', 'node:*'],
   logLevel: 'info',
 })
 

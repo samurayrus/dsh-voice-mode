@@ -589,5 +589,46 @@ export const htmlLangIsZh = (): boolean =>
 /** 文案键类型（供组件侧声明含 t() 键的结构化配置）。 */
 export type TKey = keyof typeof zh
 
+/**
+ * fork：俄语覆盖层。Применяется поверх обоих словарей (и zh, и en), потому что
+ * интерфейс форка русскоязычный: переводим постепенно, ключи без перевода
+ * берутся из исходных словарей.
+ */
+const RU: Partial<Record<TKey, string>> = {
+  // --- чтение и озвучка ---
+  secRead: 'Озвучка',
+  ttsEngineLabel: 'Движок озвучки',
+  descTtsEngine: 'Локальный Kokoro (русский, голоса Маша и Света) / локальный VITS (китайский) / Edge — облако Microsoft, текст уходит наружу',
+  voiceLabel: 'Голос',
+  descVoiceKokoro: 'Русские голоса: Маша (по умолчанию) и Света. Переключение стрелками или из списка',
+  descVoiceLocal: 'Голоса локального движка (в китайской модели VITS — пять дикторов)',
+  rateLabel: 'Скорость',
+  descRate: 'Множитель скорости речи: 0.5 медленно, 2.0 быстро, по умолчанию 1.0',
+  readAloudLabel: 'Читать ответы',
+  descReadAloud: 'В голосовом режиме — читать только там; Всегда — читать любой ответ в текущей сессии; Выключено — не читать ничего (озвучка по команде через инструмент say)',
+  readAloudVoice: 'В голосовом режиме',
+  readAloudAlways: 'Всегда',
+  readAloudOff: 'Выключено',
+  showCaptionsLabel: 'Субтитры',
+  descShowCaptions: 'Показывать субтитры произносимого текста поверх страницы',
+  showStatusBarLabel: 'Строка состояния',
+  descShowStatusBar: 'Показывать состояние микрофона и озвучки',
+  engineKokoro: 'Локальный Kokoro',
+  engineVits: 'Локальный VITS',
+  engineEdge: 'Edge (облако)',
+  preview: 'Прослушать',
+  valueOn: 'вкл',
+  valueOff: 'выкл',
+}
+
 /** 本地回退翻译：按语言取词，缺失回落英文（与官方 locale 服务的回退链一致：当前语言 → en）。 */
-export const translateLocal = (key: TKey, isZh: boolean): string => (isZh ? zh[key] : en[key]) ?? en[key] ?? key
+// fork: RU-слой накладываем прямо на словари — клиент берёт строки из локализованного
+// словаря (через сервис locale), поэтому подмены только в translateLocal недостаточно.
+for (const [key, value] of Object.entries(RU)) {
+  if (value === undefined) continue
+  ;(zh as Record<string, string>)[key] = value
+  ;(en as Record<string, string>)[key] = value
+}
+
+export const translateLocal = (key: TKey, isZh: boolean): string =>
+  RU[key] ?? ((isZh ? zh[key] : en[key]) ?? en[key] ?? key)

@@ -1138,19 +1138,7 @@ export function VoiceSettingsCard({ scope, defaultOpen = false }: { scope: Scope
               />
             </Row>
             <EngineStatusInline />
-            {engine === 'kokoro' && (
-              <Row name="kokoroModel" desc={tr('descKokoroModel')}>
-                <SegGroup
-                  score={scope}
-                  field="kokoroModel"
-                  value={value.kokoroModel}
-                  options={[
-                    { v: 'int8', label: tr('kokoroModelInt8') },
-                    { v: 'fp32', label: tr('kokoroModelFp32') },
-                  ]}
-                />
-              </Row>
-            )}
+            {/* fork: поле «точность модели» убрано — у русской модели одна q8-версия. */}
             <Row
               name="voice"
               desc={
@@ -1335,11 +1323,7 @@ export function VoiceSettingsCard({ scope, defaultOpen = false }: { scope: Scope
               <NumberField score={scope} field="idleTimeoutMinutes" value={value.idleTimeoutMinutes ?? 5} min={1} max={120} step={1} />
             </Row>
             </Section>
-            <Section title={tr('secModel')}>
-            <Row name="modelHost" desc={tr('descModelHost')}>
-              <SelectField score={scope} field="modelHost" value={value.modelHost ?? ''} options={hostOptions()} placeholder="https://..." />
-            </Row>
-            </Section>
+            {/* fork: секция «зеркало загрузки модели» убрана — модель готовит scripts/prepare-ru-model.mjs. */}
             <div style={{ fontSize: 12, color: t.term, lineHeight: '18px', padding: '4px 0 8px' }}>
               {tr('settingsEffectiveNote')}
             </div>

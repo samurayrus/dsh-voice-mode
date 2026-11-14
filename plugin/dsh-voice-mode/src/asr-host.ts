@@ -48,13 +48,16 @@ const { createOnlineRecognizer, createVad } = sherpa_onnx as unknown as {
 
 import { ensureModelFile, validateModelHost, HOST_PRIMARY, type ModelFileSpec } from './models.ts'
 
-/** 模型仓库与文件清单（SHA256 固定，供应链校验）。 */
-export const MODEL_REPO = 'csukuangfj/sherpa-onnx-streaming-zipformer-zh-int8-2025-06-30'
+/** Модель распознавания (SHA256 закреплены, проверка при загрузке).
+ *  fork: русская потоковая модель вместо китайской — тот же набор файлов,
+ *  поэтому конфиг распознавателя ниже не меняется.
+ */
+export const MODEL_REPO = 'csukuangfj/sherpa-onnx-streaming-zipformer-small-ru-vosk-int8-2025-08-16'
 const MODEL_FILES: ModelFileSpec[] = [
-  { file: 'encoder.int8.onnx', sha256: '5ac51e27981bb4dab01bb9be4958453ba50c3b61c063ddda0eab23fd3671aa4f' },
-  { file: 'decoder.onnx', sha256: '06522ad63cec0fdf6809f4e1db9bb4f7d710c34582e3b35db62ac60eccafac7e' },
-  { file: 'joiner.int8.onnx', sha256: 'b34584dc6f561089e1d747fedebb3765f2caa72c927ef54d7ca55e5ae40a814b' },
-  { file: 'tokens.txt', sha256: '6193c7ea1c96d0d9a1e9652789b40d13a8a913b434a5451e93158f5a09fd6652' },
+  { file: 'encoder.int8.onnx', sha256: 'e0db705e94ec35d803b1df4f40cda23d064e1142977c80ab288430b109777a9d' },
+  { file: 'decoder.onnx', sha256: '89b3088a9e20e1ef7f2e85ce1a3478afe6a9c4ac57369cabcc4beb8e95328ea0' },
+  { file: 'joiner.int8.onnx', sha256: 'b55784b071ab7512eab4c7c44e4f5478284ef33c83562cc6a249b972515a31e5' },
+  { file: 'tokens.txt', sha256: '93bbbc0bae6b78c0bbb743d4aa9fded3bb5ff3aac5f0200e3a769a5a05e0fdf6' },
 ]
 
 /** P2-1 Silero VAD 模型：官方 sherpa 文档下载源（csukuangfj/vad，~2MB）。 */

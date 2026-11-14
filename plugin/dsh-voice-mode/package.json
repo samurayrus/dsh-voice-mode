@@ -1,8 +1,8 @@
 {
-  "name": "dsh-voice-mode",
-  "description": "Voice plugin for DeepSeek Harness: local streaming speech recognition into editable drafts, sentence-by-sentence read-aloud with captions, and voice interruption. Edge online or local VITS/Kokoro TTS; host compatibility is bounded by engines.dsh.",
+  "name": "dsh-voice-mode-ru",
+  "description": "Russian fork of dsh-voice-mode: local Kokoro TTS with Russian voices (espeak-ng G2P), a say tool for on-demand speech, and voice interruption.",
   "icon": "./icon.svg",
-  "version": "0.7.38",
+  "version": "0.1.0",
   "type": "module",
   "main": "lib/index.js",
   "repository": {
@@ -28,6 +28,7 @@
     "lib/index.js",
     "lib/msedge-tts.cjs",
     "lib/tts-vits-worker.cjs",
+    "lib/ru-tts-worker.cjs",
     "lib/client.js",
     "lib/sense-worker.mjs",
     "cordis.patch.yml",
@@ -39,8 +40,8 @@
     "scripts/bench-asr.mjs",
     "scripts/verify.mjs",
     "scripts/check-anchors.mjs",
+    "scripts/prepare-ru-model.mjs",
     "README.md",
-    "README.en.md",
     "LICENSE",
     "THIRD_PARTY_NOTICES.md",
     "SECURITY.md"
@@ -87,8 +88,9 @@
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "^3.18.5",
+    "espeak-ng": "^1.0.2",
     "sherpa-onnx": "^1.13.6",
-    "sherpa-onnx-node": "1.13.6"
+    "sherpa-onnx-node": "2.0.1"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "^4.0.1",
@@ -140,5 +142,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "license": "MIT"
+  "license": "GPL-3.0-or-later"
 }

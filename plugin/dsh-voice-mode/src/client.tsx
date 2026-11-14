@@ -131,6 +131,11 @@ interface TtsChunkFrame {
   audio: string
   /** 音频 MIME（audio/mpeg = Edge；audio/wav = 本地 VITS/Kokoro）。 */
   mime?: string
+  /**
+   * fork：host 的 /say 路由注入的「按需朗读」帧。带此标记的帧绕过下面的
+   * 「自动朗读关闭」与「非活动会话」两道闸门，因此即使关闭阅读也能出声。
+   */
+  say?: boolean
 }
 
 /** 播放引擎的整句帧（客户端按句拼帧后的产物；P1-2 Web Audio 队列的输入）。 */
@@ -570,7 +575,7 @@ export function apply(ctx: any): void {
         order: 100,
         // M13：函数形式（与下方 settings.section 注册一致）——注册时求值会把
         // 切换语言前的旧文案冻在菜单里；函数形式每次渲染读当前语言。
-        label: () => t('stateVoiceMode'),
+        label: () => 'Голос и озвучка',
       },
       () => React.createElement(VoiceSettingsCard, { scope }),
     ),
@@ -579,13 +584,15 @@ export function apply(ctx: any): void {
   // 让设置在每个 dsh 版本上都有同一个好找的入口（Settings → 语音模式），不依赖各版本不同的插件页入口。
   ctx.slots.inject('settings.section', () =>
     ctx.slots.register(
-      { name: 'settings.section', id: 'voice-mode', order: 100, label: () => t('stateVoiceMode') },
+      { name: 'settings.section', id: 'voice-mode', order: 100, label: () => 'Голос и озвучка' },
       () => React.createElement(VoiceSettingsCard, { scope, defaultOpen: true }),
     ),
   )
   ctx.slots.inject('plugins.bundle.config', () =>
     ctx.slots.register(
-      { name: 'plugins.bundle.config', key: 'dsh-voice-mode' },
+      // fork: ключ обязан совпадать с именем пакета, иначе карточка настроек
+      // в странице плагина не рендерится (было 'dsh-voice-mode').
+      { name: 'plugins.bundle.config', key: 'dsh-voice-mode-ru' },
       (props: { view?: 'summary' | 'page' }) =>
         props?.view === 'summary'
           ? React.createElement('span', null, t('settingsCardDesc'))
@@ -1478,13 +1485,15 @@ function createVoiceBus(basePath: string = BASE_PATH, ctx?: any): VoiceBus {
       notify()
     }
     const readAloud = ui.boot.readAloud ?? 'voice'
-    if (readAloud === 'off') return
+    // fork：say 帧（host /say 按需朗读）不受「关闭阅读」限制。
+    if (readAloud === 'off' && !frame.say) return
     const alwaysHere =
       readAloud === 'always' &&
       frame.sessionId === focusedSessionId &&
       focusOwnerTab === TAB_ID &&
       !(voiceActive === frame.sessionId && voiceOwnerTab !== null && voiceOwnerTab !== TAB_ID)
-    if (frame.sessionId !== activeSessionId && !alwaysHere) return
+    // fork：say 帧带合成 sessionId（'__say__'），必须跳过「非活动会话」闸门。
+    if (!frame.say && frame.sessionId !== activeSessionId && !alwaysHere) return
     // 双重奏根治：拒绝线内的旧句帧（skip 时已开始传输、SSE 在途）→ 丢弃，
     // 防「残余 chunk 重建整句 → 重新入队播放」与新一轮回复叠加。
     const rejectLine = rejectSeqUpTo.get(frame.sessionId)

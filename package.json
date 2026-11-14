@@ -1,8 +1,8 @@
 {
-  "name": "dsh-voice-mode",
-  "version": "0.7.38",
-  "description": "Voice plugin for DeepSeek Harness: local streaming speech recognition into editable drafts, sentence-by-sentence read-aloud with captions, and voice interruption. Edge online or local VITS/Kokoro TTS; host compatibility is bounded by engines.dsh.",
-  "license": "MIT",
+  "name": "dsh-voice-mode-ru",
+  "version": "0.1.0",
+  "description": "Russian fork of dsh-voice-mode: local Kokoro TTS with Russian voices (espeak-ng G2P), a say tool for on-demand speech, and voice interruption. The npm package lives in plugin/dsh-voice-mode.",
+  "license": "GPL-3.0-or-later",
   "type": "module",
   "main": "./plugin/dsh-voice-mode/lib/index.js",
   "exports": {
